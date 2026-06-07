@@ -1,0 +1,966 @@
+- install react under client
+- install tailwind css
+- add import in the vite.config
+- add tailwind() in the plugins
+- import tailwind in index.css
+- take assets.jsx and index.css from source code this is to simply display dummy data until we build our backend
+- copy the index.css content to index.css
+- install react-router-dom lucide-react react-hot-toast
+- in main.jsx import react-router-dom
+- register with code rabbit - to monitor bugs and code efficiency
+- first push project to git hub then add the repository in code rabbit
+- add a dev branch
+- we will commit the changes to the dev branch
+- then we will make a pull request 
+- code rabbit will review then after we can merge in the main branch
+- create pages - dashboard, Employee, Layout, Leave, Loginlanding, Payslips, PrintPayslip, Settings
+- in App, import toaster from hot-toast and Routes, Route from react=router-dom
+- Toaster will be returned after <>
+- then Define routes and Route
+- first route is the Loginlanding
+- second route is layout which will house all the other pages (dashboard, employees, attendance, leave, Payslips, settings)
+- another route with path 'print/payslip/:id' and the PrintPayslip element
+- another route to direct everythine else to dashbaord - path * and element navigate to dashbaord replace
+- in the layout page - add some structure for sidebar to on the side and main to house <Outlet/>
+- create a login component - add two route for 'login/admin' and 'login/employee' with the correct props
+- create a loginleftside component - and style
+- mount the loginleftside in Loginlanding page and add page styling
+- after the loginleftside - add a div for the right hand side of the Loginlanding
+- add a header, portal list and footer comments
+- create a PortalOptions array of objects and use it to map portal - keys {to, title, description and icon}
+- add the header texts
+- map portal lists and style
+- add footer
+- design the loginform.jsx - main div will house the loginleftside and other div which will have the login from
+- the right side will have a back button 
+- in the loginform function pass in the props from App.jsx which will be desctrured
+- to handle errors, create state variables for email, password, showpassword, error, loading
+- below the subtitle, have an if error display error in a div
+- below that have a form with a onsbmit of handlesubmit
+- should have labels and inputs - input with onchange - password input to be dymanic with show  password
+- add an icon button for show password - ensure the icon can be toggle and that the icon is dynamic
+- add a sign in button - disabled when loading - also add when loading to display Loader2icon
+- commit code to dev branch and let code rabbit review - then merge to main
+- in vs code pull changes
+- create sidebar componnent 
+- const pathname = uselocation
+- create a state variable for username and mobileopen
+- when component loads, useeffect the profile name and surname from dummy data
+- when route change, close mobile menu - using useeffect and pathname
+- return a button with onclick to setmobileopen true
+- mobile overlay when mobile =open is true and setmobileopen false
+- create a variable sidebar content
+- sidebar desktop with sidebarcontent 
+- sidebar mobile with sidebarcontent
+- populat the sidebarcontent
+- mount the sidebar on the layout page
+- create a role var which should empty or emoyee
+- complete the user profile card
+- add the navigation label
+- create a navitems array with all navigation list 
+- for employee and attendance - this is dynamic based on roles
+- in navigation list section - map the navitems
+- create a isactive var = pathname.startwith(item.href)
+- return the Link - display name and icon
+- dynamically use isactive to to toggle the small rectangle on the left and chevronrighticon 
+- in the logout section add a logout button- style the button
+- create a handlelogout function = window.location.href = '/login'
+- in dashboard page, create a data state var and a loading state var
+- when page loads, effect - set data to dummydshboard data
+- settimeout for loading to false to 1000
+- if loading - return Loading component
+- if no data - return message
+- display different dashboard headers depending on the role
+- create the loading component with a self closing div that animate a spin
+- create an EmployeeDashboard component and pass in data as a props
+- create a emp var for data.employee
+- create a card array for each card and the info they will display
+- in the return statement - return everything that will appear on the dahsboard page - the header, the card using the map method
+- add two Link as buttons for Mark attendance and Apply leave
+- create the admin dashboard componentt passing data as prop
+- create a stat array var for the stats we will display on the dashboard
+- copy the structure from employeedashboard and adjust it accordingly
+- mount the admindashboard on dashboard page 
+- in employees, create a employees, loading state var
+- create a fetchemployees function using usecallback and aync with settime out
+- call this function whEn components load and pas in fetchemployees as dependencie of the useeefect
+- start stying the page wuth header section, input section and card section
+- create a search and selecteddept state var
+- for input use onchange and the state variables created
+- for select use onchnage as well and for options use the DEPARTMENTS array from assets
+- go back to the dummyemployee data in the fetch function and filter by selected department
+- pass selecteddept in the async array
+- create a filtered variable - this will filter the names as a user searches 
+- for employee cards - if loading else display employees
+- check if filtered length is 0 return a p tag (no employee found)
+- else display the employee
+- create an employeecard - pass props employee, ondelete onedit
+- after styliing this component - mount it on the employee page woth the correct props
+- create editemployee and showcreatemodal state var 
+- pass props onDelete={fetchEmployees} onEdit={(e) => setEditEmployees()}
+- got back to employee card and display also initials
+- display also the employee department or remote
+- if the employee is deleted display deleted
+- if !employee.isdeleted display a div and a button which onclick to onedit pass in employee and another button with onclick delete pass handledelete
+- create a handledelete function if(!confirm("))return
+- in the employees when showmodal && div with onclick set it to false
+- a div within with onclick e.stopPropagation
+- within this div - put a h2 and a p and a button with an x icon to close modal 
+- up in the add new employee button - add an onclick to show modal
+- in the edit employee modal section - add a div with an onclick to setEditEmployees to null
+- within the div add another div with e.stopPropagation()
+- add another div for flex eyc..
+- add another for h2 p this can be copied from the first modal
+- also button can be copied - replcae the onclick to seteditemployee
+- create a employeeform component with these props initialdata, onsuccess, oncancel
+- create a navigate using usenavigate 
+- create a loading state var
+- create a iseditmode = !!initialdata
+- create a hadnelsubmit = e.prevent default
+- start filling the form with labels and inputs 
+- input with nme required and default value attribute 
+- for join date we need to convert the date and use itenrary operator
+- last one is a text area for bio - breif description
+- mount employeeform in the edit form  
+- pass the initialdata prop as editemployee, onsuccess prop as seteditemployee, fetchemployee and oncancel with seteditemployee
+- mount the employee form in the add form
+- pass the prop as onsuccess close modal and fetchemployee and oncancel as close modal
+- in the employeeform add a div with label and select 
+- first option is select department 
+- for the other options map the DEPARTMENTS array
+- below that add position and basic salary , allowances and deductions
+- if iseditmode && then div containing select for employement status - active and inactive
+- copy the entire personal information div for account set up section
+- in this section the first label will be work email - delete the register
+- if not editmode && temporary password
+- if editmode && change password 
+- add another div for system role label which will be a select with two options "employee or admini
+- next section is the buttons
+- add a cancel button with onclick if oncacnel then oncancel() or navigate(-1)
+- add a button wehere disabled when loading 
+- its content wehn loading should have a loading icon - and iseditmode - uodate employee 0r create empoyee
+- review the code with code rabbit
+- in attendance, create a history, loading and isdeleted state variable
+- create a fetchdata usecallback async function which sets history data
+- settimeout where loading stops
+- when components loads call the fetchdata function and fetchdata as dependencie
+- below tha, if loading return loading component
+- create a today var = new date - today.sethours(0,0,0,0)
+- create a today record which goes through history to find the date that equals today's date - use todatestring()
+- start filling the div in the return with page title and subtitle
+- remove the "ADMIN" in the sidebar to see Employee sidebar and navigate to attendance
+- if isdeleted - in div let employee know he can no longer check in because his records have been deleted
+- else - we will mount the attendance form component 
+- under component - create attendance foldeer with attendancestats, attendancehisotry, checkinbutton components
+- in checkinbutton - pass in todayrecord and onaction props
+- create a loading state var
+- create a handlesubmit async function setting loading to true and when time out loading false also calling onaction with 1000 
+- create a ischedin var = to the boolean of todayrecord.checkedin
+- in the return div - create a button which if loading display loading icon else if ischeckedin logouticon else loginicon
+- within that button element - add an h2 element - is loading - "Processing" else if ischeckedin "clock out" else "clock in"
+- add also a p element ischeckin - "click to end your shift" : "start your work day"
+- mount the checkinbutton to the attendance with the correct props onaction= fetchdata
+- style button and call handlesumbit with onclick
+- in attendancestats, pass history props 
+- create a totalPresent var = to a filter of history.length for days present ("present" or "LATE")
+- create a totalLate var = to a filter of history.length for days arrived LATE
+- create a stats array of objects for days present, late arrivals and avg work hrs
+- start stying the return div by mapping the stats array.
+- mount attendance stats and pass in props for history
+- mount attendancehistory and pass in props for history
+- in attendancehistory pass in history as props
+- after h3 of recent activity - return a table for date, check in, check out, work hours, day type, status
+- for tbody if history length is 0, tr -> td No records found
+- else history.map - first create a daytype = getdaytypedisplay(record) (defined in the assets) then tr -> td for every heading
+- npm install date-fns
+- import format from date-fns
+- use format(new Date(record.date), 'MMM dd, yyyy') 
+- for checkin and checkout - if record.checkIn - format(new Date(record.date), 'hh:mm a') or '-'
+- for working hours - use the asset function getworkinghoursdisplay
+- for day type - dayType.label !== "-" ? <span className={`badge ${dayType.className}`}>{dayType.label}</span> : "-"
+- for status - the classname will be dynamic based on the record status from assets
+- in Leave.jsx - create a leaves, loading, showmodal, isdeleted state var
+- create a isAdmin var 
+- create a fetchleaves function usecallback - setleaves to dummydata - settimeout which sets loading to false 
+- upon component loading call fetchdata() - and fetchdata as dependency
+- if loading - mount the Loading component
+- create a approvedleaves var = a filter of leaves where status === APPROVED
+- create sick count var = a filter of approved leaves.length where type === sick
+- create casualcount where type ===  casual 
+- create annualcount where type === annual
+- create a leavestats = an array of objects for label, value and icon
+- in the main return - return the Leave header and the subtile is dynamic based on isAdmin
+- below that div, if is not admin and is not deleted have a button for apply leave which show modal on click
+- below that - is not isAdmin - loop leavestats to display label, icon and value 
+- create a Leave folder in components - create leavehistory
+- copy all the content from attendancehistory
+- pass in props leaves, isadmin, onupdate
+- create a processing state var (null)
+- create an async handlestatusupdate function with id and status as params = setprocessing(id)
+- remove recent activity in the return
+- in the thead el - some headers will be dynamic based on isAdmin
+- if leaves.length is 0 - make the td colspan dynamic based on isAdmin
+- then map the leaves - if isadmin return employee name and surname for the td 
+- in the second td - return span with leave.type
+- next td is the date - start date - end date
+- the next td is for leave.reason
+- and the next td is for status with dynamic classname 
+- last td will be if isadmin - return td if leave status is pending return div with button 
+- if the processing === leave.id return loader icon else return check
+- copy the button and change the last icon to an x
+- style both buttons and add a disabled property to !!processing
+- add onclick to call handlestatusupdate pass in the id and status approved and rejected
+- mount leavehistory to leave.jsx with the correct props onupdate=fetchleaves
+- cretae an Applyleavemodal component and mount it on Leave
+- pass in props open, onclose and onsuccess
+- create a loading state var
+- create a today var, a tomorrow var referencing today 
+- use setdate and getdate method on tomorrow to add 1
+- create a mindate = tomorrow.toISOString().split('T')[0];
+- create a handlesubmit function with ehich prevent default refresh
+- after that if(!open) return null
+- in the return div add an onclick for onclose
+- add a div within the main div with a onclick of e.stopPropagation
+- add another div within which will be the header section
+- add a div which contains h2 and p 
+- a button on the same level which has an onclick of onclose and an x icon
+- after the header section, add the form 
+- form will be divided into type, duration, reason and buttons
+- for type - we need a select el with options 
+- for duration, spans and inputs for date with min = mindate
+- for reason, add a label and a textarea
+- for the buttons. add them within a flex div 
+- cancel button onclick of onclose disabled = loading type button 
+- submit button onclick onclose, disabled = loading type submit 
+- dynamic when loading loader icon or send icon 
+- dynamic when loading submitting else submit
+- in Payslips.jsx - create a Payslips, employee and loading state var
+- create a isadmin var 
+- create a fetchpayslips usecallback async function which setpayslips to dummy data and settimeout where loading stops
+- when page loads, call fetchpayslips and is also dependencie
+- add another useeffect for if isadmin setemployees to dummy data
+- if loading return loading component
+- in the return div - page title - page sub title is dynamic based on isadmin
+- also isadmin && button for generating slips 
+- create a pay slip folder - create a paysliplist component - copy everything from return in leavehistory
+- modify the table headers and table body
+- replace leaves with payslips and leave with payslip and ensure the body matches what is on the video for payslip ui
+- for the download button add an onclick to window.open to the path of printpayslips 
+- mount the component and pass in the correct props
+- create a generatepayslipform component with empoyees and onsuccess as props
+- create a isopen and loading state var 
+- if is not open return a button for generate payslip with an onclick to setisopen to true
+- create a handlesubmit function with e.preventdefault
+- mount the generatepayslipform component in payslips 
+- in generatepayslipform, in the return div start stying the popup add an x button to setisopen to false
+- after the x button create a form with onsubmit as handle submit
+- first section is employee with the ooptions obtained from mapping the employee array
+- 2nd section is month & year, with option mapped from creating an array of length: 12 and setting (_,i) => i + 1
+- for year it will be an  input with default value new date().getfullyear()
+- for basic salary it will be a normal input with placeholder and required
+- for allowances and deductions - normal input with a defaultvalue
+- in the buttons section, we need two buttons for cancel and generate
+- the cancel btn onclick setisopen to false 
+- the generate btn setisopen to false - disabled when loading - when loading add a loader icon
+- push code and code rabbit review the code 
+- in the settings page, create a profile, loading, showpasswordmodal state var
+- create a fetchprofile async function setting profile to dummy data
+- when page loads call the fetchprofile function 
+- if loading return the loading component 
+- style the header
+- below that when profile && profile form (put a p tag palceholder as this will be a component)
+- below that the change password trigger
+- in this section the most important thing is the chnage button setshowpasswordmodal to true
+- create a profile form component with initialdata and onsuccess as props
+- create a loading, error, message state var
+- create a handleSubmit which prevents a default 
+- in the return - replace div with a form with onsubmit handlesubmit
+- style the header
+- below that when error && div with a self closing div {error}
+- copy the above and replace error with message and change colors
+- below that add a div within that add a div within that add a div - this div will have name label and input
+- input will be disabled value will show the name and surname no cursor allowed
+- copy this div and change label to email and change input value accordingly
+- copy this div and change the label to  position and its value
+- outside of this div - make another for textarea and its label Bio 
+- for textarea - disabled if isdeleted - defaultvalue and placeholder className dynamic if isdeleted
+- below the textarea - if initialdata.isdeleted = account deactivated - no longer update profile 
+- else a submit button with disabled loading - if loading ? loader icon else save icon 
+- create a changepasswordmodal with open and onclose props
+- create a loading, message state var - message with a state of object {type: "", text: ""}
+- create an async function hadnelsubmit with e.preventdefault 
+- if is not open return null
+- in the return div add an onclick of onclose 
+- add a self closing div and another div with a onclick pf e.stopPropagation
+- add a div within for the change password h2 with lockicon 
+- below it add a X button with an onclick of onclose
+- below that div - add a form with an onsubmit of handlesubmit
+- if message.text return a div with a self closing div with dynamic classes and {message.text}
+- below this - add a div with a label and input for current password
+- replicate the above div but for new password
+- below this div add a div for buttons - cancel button onclick of onclose 
+- update button disabled when loading - loader action when loading
+- in the PrintPayslip page import useParams to import id from payslip
+- create a payslip and loading state var 
+- when this page loads, setpayslip to dummypayslipdata.find(where slip._id === id) and id as dependencie
+- when page loads set time out to 1000 and setloading to false 
+- if loading return Loading component 
+- if no payslip return no payslip found
+- in the return div - we have a PAYSLIP header - and a p text of the date using format 
+- below this div cretae a div with grid to display name & surname - position - email and period
+- below this create a div which will house a table - thead (description and amount)
+- tbody basic salary - payslip.basicsalary - allowances - deductions - netsalary
+- below this div - add another div for btn - onclick window.print 
+-------------------------------------------------------------------------------------------------------------------------
+
+- create server folder - create server.js 
+- open server in terminal - npm init -y
+- add "type": "module" in package.json - this is to use import in our code
+- npm install express cors dotenv multer jsonwebtoken bcrypt mongoose 
+- npm install --save-dev nodemon
+- in package.json - in script remove test with server : nodemon server.js
+- in the main branch create .gitignore add node_modules and .env 
+- in server.js import express, cors, and 'dotenv/config'
+- create an app
+- create PORT = process.env.PORT || 4000
+- complete the server.js 
+- //Middleware - app.use(cors()) - app.use(express.json()) - app.use(multer().none())
+-//Routes - app.get("/", (req, res) => res.send("Server is running"))
+- app.listen(PORT, () => console.log(`Serevr is running on port ${PORT}`)) 
+- sign into mongo db - create a new project - set up db user - use mongoose driver to connect
+- white list ip adress
+- copy the connection string to .env as MONGODB_URI and add /projectname
+- create a config folder with db.js
+- import mongoose 
+- create a connectdb async function 
+- in the try block - mongoose.connection.on('connected', () => console.log("Database connected")) - await mongoose.connect(process.env.MONGO_URI)
+- export the connectdb function
+- in server.js await call the connectdb - commit code
+- create a models folder - create a user.js 
+- import mongoose - create a userschema = new mongoose.schema 
+- define email, password, role, timestamp
+- define user mongoose.model.User || mongoose.model("User", userSchema) and export user
+- create the Employee model and copy from User model 
+- adjust for userId type: mongoose.Schema.Types.ObjectId, ref: "User",
+- firstname, lastname, email, phone, position, basicsalary, allowances, deductions, employmentstatus, joindate, isdeleted, bio
+- create a constants folder and department.js - copy from assets.jsx
+- add a departments property with enum DEPARTMENTS
+- create a contoller folder and employeeController.js
+- create the 4 controllers for get, create, update and delete employees 
+- for the get conroller create a trycatch below in an async function
+- destructure the department from the req.query
+- create a where = {} var 
+- and if department then wehre.department = department, this is to filter the database 
+- then const employees await use find to filter the Employee table using where 
+- sort {created: -1} popualte("userId", "email role").lean()
+- create a result var to map employees and return an object with a spread opearator ...emp 
+- set id to emp._id tostring and user to emp.userid if exists return email and role else null
+- return res.json(result) - in the catch block return res.status(500).json(error: "failed to fetch ...")
+- for the createemployee async function destructure everything in form = req.body 
+- if not email, password, firstname and lastname then return status 500 "missing fields required"
+- to encypt the password - import bcrypt 
+- create a hashed var = await bcrypt(password, 10)
+- create a user = await User.create({}) import this from models 
+- pass in what is required - and for role: role || "EMPLOYEE"
+- create employee data for userId: user._id - for department || "engineering"
+- for numbers Number(x) || 0 - for date: new Date(x) - for bio || ""
+- return status 201 success true, employee
+- in the ctch block - if error.code 110000 return status 400 "email exists"
+- console.error("create employee error:", error)
+- return status 500 "failed to create employee"
+- for the updateemployee copy from cretaeemployee 
+- destructure id to req.params
+- remove joindate add employment status
+- const employee use findbyid to filter through the Employee model 
+- if not employee status 404 "employee not found"
+- remove the unnecessary code - remove const employee - change create to findbyidandupdate pass in the id
+- remove the userid, remove joindate and add employmentstatus || "ACTIVE"
+- //update user record
+- const userUpdate = {email} 
+- if role userUpdate.role = role and if password userUpdate.password = await brcypt...
+- await User.findbyidandupdate(employee.userId, userUpdate)
+- return res.json success true - in the catch delete console.error and adjust error message
+- for the deleteemployee contoller - destructure id = req.params 
+- const employee = findbyid(id)
+- if not employee status 404 "employee not found"
+- employee.isdeleted = true;
+- set employmentstatus to "INACTIVE"
+- await employee.save()
+- return res.json({success true})
+- in the catch blow status 500 "Failed to delete"
+- create routes folder and employeeroutes
+- import {router} from express
+- const employeeRouter = router()
+- create the get, post, put and delete routes
+- export default employeerouter
+- in controller folder create authcontrpller.js
+- // login for employee and admin and // POST /api/auth/login
+- create an export const login async function 
+- destructure {email, password and role_type } to req.body 
+- if not email or not password - status 400 - emails and passwords are required
+- const uer = await User.findOne({email})
+- if not user - status 401 - "Invalid credentials"
+- if role_type === admin && user.role !== "ADMIN" - status 401 "not authorized as admin"
+- same for employee
+- create an isvalid var = await bcrypt.compare password with user.passwrod 
+- if is not valid return 401 "invalid credentials"
+- const payload = {userId: user._id.toString(), role: user.role, email: user.email}
+- payload ensures that the info is encoded so that later requestes dont have to hit the db
+- add a JWT_SECRET in .env
+- create token var = jwt.sign(payload, process.env.jwt_secret, {expresin: "7d"}) - ensures to import jwt
+- return res.json({user: payload, token}) 
+- in the catch block - console.error "Login error", error 
+- return status 500 "Login failed"
+- // Get session for employee and admin and // GET /api/auth/session
+- export const session = (req, res) => { const session = req.session; return res.json({user: session}) }
+- // Change password for employee and admin and // POST /api/auth/change-password
+- in the trycatch block - const session = req.session 
+- destructure currentpassword and newpassword from req.body
+- if both are not there - status 400 "both passwrods required"
+- const user = find user by session.userId 
+- if not user - status 404 "User not found"
+- const isvalid = compare currentpassword and user.pasword 
+- if is not valid - status 400 "Current password incorrect"
+- const hashed - hash the new password 
+- await findbyidandupdate using session.userId {password : hashed} and return success 
+- in the error block status 500 - "Failed to change password"
+- create a authroutes - import {Router} from express 
+- create authrouter = router() and create all the routes
+- export default authrouter
+- create a middleware folder with auth.js in it
+- import jwt from jsonwebtoken
+- create an export protect function with req, res, next
+- in the trycatch block - define authHeader = req.headers.authorization 
+- if (!authHeader || !authHeader.startsWith("Bearer ")) return 401 "Unauthorized"
+- get token from authHeader.split(" ")[1]
+- session = jwt.verify(token, process.env.jwt_secret)
+- if not session status 401 "Unauthorized"
+- req.session = session and then call next()
+- in the catch block return status 401 "Unauthorized"
+- create an export protectAdmin function with the same parameters 
+- if req?.session?.role is not "ADMIN" status 403 "Admin Access is required"
+- then call next() 
+- add the protect to the session and changepassword routes 
+- add the protect and protectAdmin to the employees routes 
+- create the apis in the server.js 
+- app.use("/api/auth", authrouter) and ("/api/employee", employeeRouter)
+- create a profilecontroller.js
+- //GET Profile on //GET "/api/profile" create an export getprofuile async function with req,res 
+- in the try block define session = req.session 
+- define employee = await Employee.findOne({userid: session.userId})
+- if (!employee) { //Authenticated user is not an employee - return to admin profile
+            return res.json({
+                firstName: "Admin",
+                lastName: "",
+                email: session.email
+            })
+ }
+ - return res.json(employee)
+ - in the catch block status 500 "failed to fetch profile
+ - //Update Profile on //PUT "/api/profile" create an export updateprofile async function with req,res 
+ - define session and employee again
+ - if not employee status 404 "employee not found"
+ - if employee.isdeleted status 403 "account deactivated, cannot update profile"
+ - await employee.findbyidandupdate pass in employee._id {bio: req.body.bio}
+ - return success
+ - in the catch block status 500 "failed to update profile"
+ - create a profilerouter.js
+ - import {Router } from express and create profileRouter 
+ - get route ("/", protect, getProfile)
+ - post route ("/", protect, updateProfile) it should be put
+ - export the profile router and add this route inn server.js
+ - under models create attendance.js 
+ - copy from User model
+ - employeeId - type : mongoose.Schema.Types.ObjectId, ref "Employee" required: true 
+ - date - type Date , required true
+ - checkin - type Date, default null same with checkout 
+ - status - trpe string, enum: PRESENT, ABSENT, LATE, default PRESENT 
+ - workinghours - type number, default null 
+ - daytype - type string, enum: full day 3/4 day 1/2 day short day null, default null 
+ - after the schema add attendanceSchema.index({employeeId:1, date:1}, {unique:true})
+ - in controller, create attendancecontroller.js
+ - //Clock in/out for employee //POST /api/attendance
+ - create export clockinout function (req, res)
+ - define session and employee using findOne({userId: session.userId})
+ - if not employee 404 "employee not found"
+ - if employee deleted 403 "Your Account Is Deactivated. You Cannot Clock In/Out"
+ - define today = new Date() - sethours(0, 0, 0, 0)
+ - use attendance model to define existing findOne using employee id and date = today
+ - define now = new Date() 
+ - if not existing define isLate = now.getHours >= 9 and minutes > 0
+ - define attendance by await Attendance.create({employeeId, date, checkin, status: isLate ? LATE : PRESENT})
+ - return success type CHECK_IN data attendance
+ - else if not existing.checkOut - define checkintime as new Date(existing.checkIn).gettime()
+ - define diffMs as now.getTime() - checkintime
+ - diffHours as diffMs / 1000 * 60 * 60
+ - existing.checkOut = now 
+ - define workinghours as parsefloat of diffhours to 2 decimal places
+ - let daytype to half day 
+ - use if and else if for >= 8, 6, 4 and else 
+ - set to existing.workinghours and existing.daytype 
+ - await existiing.save()
+ - return success type check_out data existing 
+ - add the overall else status 400 "already checked out" data existing
+ - in the catch block console.error("Attendance Error", error)
+ - and status 500 "Operation failed"
+ - //get attendance for employee //GET /api/attendance
+ - create export async getATtendance function (req, res) - define session and employee like for clockinout 
+ - definie limit parseInt(req.query.limit || 30)
+ - define history await Attendance.find({employeeId: employee._id}).sort({date: -1}).limit(limit)
+ - in the catch block 500 - "Failed to fetch attendance"
+ - create attendancerouter - import {router} from express
+ - const attendancerouter = Router()
+ - define post - protect, clockinout and get getATtendance then export router
+ - create a leaveApplication model 
+ - schema: employeeId FROM Employee, type - type:string, enum [sick, casual, annual], required true 
+ - startdate, endate date required true, reason type string, required true 
+ - status enum [PEDNING, APPROVED, REJECTED, default PEDNING
+ - crete LeaveApplication mongoose.models.leaveapplication || mongoose.model("LeaveApplication", schema)
+ - export default
+ - create leavecontroller 
+ - //Create leave and //POST /api/leave   
+ - createLevae in the try block get session - use it to findOne in the Employee using userId
+ - if not employee 404 "Employee not found"  
+ - if employee isdeleted 403 "account deactivated ..."
+ - destructure type, startDate, endDate, reason from req.body    
+ - if any of these are not present 404 Missing fields
+ - define today and sethours to midnight
+ - startdate <= today or enddate <= today - 403 "leave days must be in the future" 
+ - endDate < startDate 403 - "End Date Cannot Be Before Start Date"
+ - define leave as await leaveapplication.create 
+ - pass in employeeId as employee._id 
+ - type, new Date(startDate), new Date(endDate), reason, status "PEDNING"    
+ - return true , data : leave 
+ - in the else blcok - define employee from employee model findone with userid and .lean()
+ - if not employee 404 "Employee Not Found"
+ - define leaves as going to the leaveapplication model and find() employeeId  and sort  -1
+ - res.json data: leaves and employee: {...employee, id: employee._id.toString()}
+ - catch block 500 "Failed to get Levaes"          
+ - create a updateleavestatus (res, req)
+ - destructure status from req.body
+ - if(!["APPROVED", "REJECTED", "PENDING"].includes(status)) -> 400 "Invalid status"
+ - define leave as await findbyidandupdate Leave model (req.params.id, {status}, {new: true})
+ - if not leave 400 "No leave found"    
+ - in the catch block 500 "Failed to update leave status"  
+ - create a leaveroute.js - portect all routes and protect admin the updateleavestatus
+ - in server.js import the leave route and app.use 
+ - create payslip schema with employeeId, month, year, basicsalary, allowances, deductions, netsalary
+ - allowances and deductions default value of 0 and not required    
+ - create a payslip controller.js
+ -// Create payslip and //POST /api/payslip const createpayslips  
+ - in the try block destructure employeeId, month, year, basicSalary, allowances, deductions from req.body
+ - if not the required fields 400 "missing fields are required"
+ - define netsalary 
+ - define payslip using Payslip model - pass in the reqwuired data 
+ - use Number for the number fieedks and the or operator for where default 0
+ - // GET payslip and //GET /api/payslip const getpayslips 
+ - get session from middleware - const isadmin = session.role is ADMIN
+ - if isadmin definde payslips by calling model and find().populate("employeeId").sort({crate -1})
+ - define data as the map method of payslips -> const obj = p.toObject()
+ - return {..obj, id: Object._id.toString(), employee: obj.employeeId, employeeId: obj.employeeId?._id?.toString()}
+ - return {data}
+ - in the else block define employee as findOne of Employee using userId as session.userId
+ - if not employee 404 "employee not found"
+ - const payslips and we use the employeeid to find and sort to {created: -1}
+ - return res.json({data : payslips})
+ - // GET by payslip and //GET /api/payslip:id const getpayslipsbyid
+ - define payslip as a findbyid use id from params on payslip model - populate by employeeId and lean 
+ - if not slip - 404 "payslip not found"
+ - define result as an object {...payslip, id: payslip._id.toString(), employee: payslip.employeeId}
+ - define paysliproutes post both protect - the rest one protect 
+ - import this routes to server.js
+ - commit code 
+ - create a dashbaordcontroller
+ - //GET dashboard for employee and admin & //GET /api/dashboard
+ - create a getdashbaord - define isadmin using session 
+ - if isadmin const [totalemployees, todayattendance, pendingleave] = await Promise.all([])
+ - countdocuments of employee filter by {isdeleted: {$ne: true}}
+ - countdocuments of attendance filter by date - $gte new date(new date().sethours(0)), $lt: ...sethours(24)
+ - countdocuments of leaveapplication sort by statys pending
+ - return res.json (role, totalemployees, total departments, total attendance, pendng leaves)
+ - in the else block - define employee by findOne(userId ) in the Employee model and lean()
+ - if not employee 404 "employee not found"   
+ - define today as new Date()
+ - define [currentMonthAttendance, PendingLeaves, latestPayslip] 
+ - as Promise.all , countdocuments of Attendance - get employeeid and date 
+ - date {$gte : ew Date(today.getFullYear(), today.getMonth(), 1),$tt: new Date(today.getFullYear(), today.getMonth() + 1, 1)}  
+ - For leaveApplication {employeeId and status "pending"}
+ - for Payslip findOne() filter by employeeid sort and lean()         
+ - return a res with role "employee", employee: spread operator id stringify id, currentMonthAttendance, pendingleave
+ - latestPayslip: latestPayslip ? {...latestPayslip, id: latestPayslip._id.toString()} : null
+ - in the catch block console.error and return 500 "failed to get dashboard"
+ - define route in dashbaordroutes, protect this route and then import it to server.js
+ - create seed.js under server folder 
+ - import dotenv/config and connectDB from db.js 
+ - define a tempPassword e.g "admin123"
+ - create a registerAdin async function 
+ - add an ADMIN_EMAIL in .env e.g "admin@xyz.com"
+ - define this ADMIN_EMAIL by using process.env - if not ADMIN_EMAIL console.error "missing admin email"
+ - process.exit(1) 
+ - await connectDB()
+ - define existiingadmin by findOne in User using email = process.env.ADMIN_EMAIL
+ - If existiingadmin - console.error ("User Already Exists As Role", existingAdmin.role)
+ - process.exit(0)
+ - import bcrypt
+ - define hashedpassword using await bcrypt
+ - define admin - await User,create input email and password 
+ - console.log("Admin User Created") console.log("\nemail", admin.email) console.log("password", TemporaryPassword)
+ - console.log("\nChange The Password After Login.")
+ - then process.exit(0)
+ - in the catch block console.error "Seed failed", error
+ - lastly call the registerAdmin function
+ - in package-json - in scripts - add "seed": "node seed.js"
+ - npm run seed to create the admin user 
+ - commit code 
+ - sign into INNGEST
+ - put event and signing key in .env
+ - npm install inngest 
+ - create an inngest folder under server - create index.js 
+ - copy step 3 create inngest client
+ - copy both imports in step 4 in server.js, ensure all paths are correct 
+ - copy the api endpoint still in step 4
+ - // Auti check-out for employees 
+ - const autoCheckOut {id: "auto-chek-out"}, {event: "employee/check-out"},
+ - in the async function - destructure employeeid and attendanceId = event.data 
+ - //Wait for 9 hours - await step.sleepUntil("wait-for-the-9-hours", new Date(new Date).getTime() + 9 * 60 * 60 * 1000)
+ - // get attendance data - let attendance = findbyid(attendanceid)
+ - if not attendance?.checkout - //get employee data - define employee as findbyid(employeeId)
+ - //Send reminder email (will come back to this)
+ - //After 10 hours, mark attendance as checked out with status late 
+ - await step.sleepUntil("wait-for-the-9-hours", new Date(new Date).getTime() + 9 * 60 * 60 * 1000)
+ - define attendance using Attendance model and findbyid using attendanceId
+ - if not attendance?.checkOut - set attendance.checkout as new Date(attendance.checkIn).getTime() + 4 * 60 * 60 * 100
+ - attendance.workingHours = 4 ,attendance.dayType = "Half Day", attendance.status = "LATE", await attendance.save()
+ - //Send email to admin, if action is not taken within 24 hours copy the autoCheckOut function 
+ - delete content rename function to leaveApplicationReminder takes the same id, event: "leave/pending"
+ - in async ({event, step}) => destructure leaveApplicationId to event.data 
+ - //wait for 24 hours 
+ - await step.sleepUntil("wait-for-the-24-hours", new Date(new Date().getTime() + 24 * 60 * 60 * 1000))
+ - define leaveApplication as findbyid(leaveApplicationId)
+ - if leaveApplication?.status is pending define employee using leaveApplication.employeeId 
+ - //Sned email to admin to take action on leave application
+ - add both functions to the export at the bottom
+ - //Cron: Check attendance at 11:30 AM and email absent employees
+ - create attendanceReminderCron { id: "attendance-reminder-cron" }, { cron: "30 9 * * *" }, 
+ - in the async function {step} => //Step 1: Get today's date range (SAST)
+ -         const today = await step.run("get-today-date", () => {
+            const startSAST = new Date(new Date().toLocaleDateString("en-CA", {timeZone: "Africa/Johannesburg"}) + 
+            "T00:00:00 +02:00");
+            const endSAST = new Date(startSAST.getTime() + 24 * 60 * 60 * 1000);
+            return {startSAST: startSAST.toISOString(), endSAST: endSAST.toISOString()}
+        })
+        
+ -         //Step 2: Get all active, non-deleted employees
+        const activeEmployees = await step.run("get-active-employees", async () => {
+            const employees = await Employee.find({
+                isDeleted: false,
+                employmentStatus: "ACTIVE"
+            }).lean()
+
+            return employees.map((e) => ({
+                _id: e._id.toString(),
+                firstName: e.firstName,
+                lastName: e.lastName,
+                email: e.email,
+                department: e.department
+            }))
+        })
+
+ -         //Step 3: Get employee IDs on approved leave today
+        const onLeaveIds = await step.run("get-on-leave-ids", async () => {
+            const leaves = await LeaveApplication.find({
+                status: "APPROVED",
+                startDate: { $lte: new Date(today.endSAST) },
+                endDate: { $gte: new Date(today.startSAST) }
+            }).lean();
+            return leaves.map((l) => l.employeeId.toString())
+        }) 
+
+ -         //Step 4: Get Employee IDs who already checked in today
+        const checkInIds = await step.run("get-chec-in-ids", async () => {
+            const attendances = await Attendance.find({
+                date: {
+                    $gte: new Date(today.startSAST),
+                    $lt: new Date(today.endSAST)
+                }
+            }).lean();
+            return attendances.map((a) => a.employeeId.toString())
+        })
+ - 
+ -         //Step 5: Filter absent employees (not on leave & not checked in)
+        const absentEmployees = activeEmployees.filter((emp) => 
+            !onLeaveIds.includes(emp._id) && !checkedInIds.includes(emp._id)
+        )
+ -         //Step 6 Send reminder emails
+        if(absentEmployees.length > 0) {
+            await step.run("send-reminder-emails", async () => {
+                await Promise.all(absentEmployees.map((emp) => {
+                    //send email
+                }))
+            })
+        }
+
+        return {
+            totalActive: activeEmployees.length,
+            onLeave: onLeaveIds.length,
+            checkedIn: checkedInIds.length,
+            absent: absentEmployees
+        }
+ - 
+ - add attendanceReminderCron on the exports
+ - install nodemailer - create nodemailer.js under config 
+ - copy "Create Transporter" from docs
+ - add SMTP_USER and SMTP_PASS to env 
+ - create a brevo account and generaate a new smtp key 
+ - paste the smtp user and the smtp_pass is the key
+ - Add SNEDER_EMAIL= email used to create the brevo account
+ - in the nodemailer.js change host to smtp-relay.brevo.com
+ - const sendEmail = async({to, subject, body}) => {
+  const response = await transporter.sendMail({
+    from: process.env.SENDER_EMAIL,
+    to,
+    subject,
+    html: body
+  })
+}
+ - export the sendEmail function
+ - in the inngest index file, in the autoCheckOut function define the sendEmail function
+ - await sendEmail({
+                to: employee.email,
+                subject: "Attendance Check-Out Reminder",
+                body: `<div style="max-width: 600px;">
+                        <h2>Hi ${employee.firstName}, </h2>
+                        <p style="font-size: 16px;">You have a check-in in ${employee.department} today:</p>
+                        <p style="font-size: 18px; font-weight: bold; color: #007bff; margin: 8px 0;">
+                            ${attendance?.checkIn?.toLocaleTimeString()}
+                        </p>
+                        <p style="font-size: 16px;>
+                            Please make sure to check-out in one hour
+                        </p>
+                        <p style="font-size: 16px;>
+                            If you have any questions, please contact your admin.
+                        </p>
+                        <br/>
+                        <p style="font-size: 16px;">Best Regards,</p>
+                        <p style="font-size: 16px;">Admin</p>
+                </div>`
+            })
+
+ - go to the leaveApplicationReminder function 
+ - //Sned email to admin to take action on leave application
+            await sendEmail({
+                to: process.env.ADMIN_EMAIL,
+                subject: "Leave Application Reminder",
+                body: `<div style="max-width: 600px;">
+                        <h2>Hi Admin, </h2>
+                        <p style="font-size: 16px;">You have a leave applicattion in ${employee.department} today:</p>
+                        <p style="font-size: 18px; font-weight: bold; color: #007bff; margin: 8px 0;">
+                            ${leaveApplication?.startDate?.toLocaleDateString()}
+                        </p>
+                        <p style="font-size: 16px;>
+                            Please make sure to take action on this leave application.
+                        </p>
+                        <br/>
+                        <p style="font-size: 16px;">Best Regards,</p>
+                        <p style="font-size: 16px;">Admin</p>
+                </div>`
+            })
+ - in the attendanceReminderCron
+ - <div style="max-width: 600px; font-family: Arial, sans-serif;">
+                                <h2>Hi ${emp.firstName},</h2>
+                                <p style="font-size: 16px;">We noticed you haven't marked your attendance yet today.</p>
+                                <p style="font-size: 16px;">The deadline was <strong>11:30 AM</strong> and your attendance is still missing.</p>
+                                <p style="font-size: 16px;">Please check in as soon as possible or contact your admin if you're facing any issues.</p>
+                                <br />
+                                <p style="font-size: 14px; color: #666;">Department: ${emp.department}</p>
+                                <br />
+                                <p style="font-size: 16px;">Best Regards,</p>
+                                <p style="font-size: 16px;"><strong>QuickEMS</strong></p>
+                            </div> 
+ -
+ - in attendancecontroller - import inngest - after the attendance has been created, in a trycatch use the .send method 
+ - name is the trigger and data employeeId: employee._id, attendanceId: attendance._id 
+ - in the leavecontroller - import inngest - after the leave is created, in a trycatch use s.send method 
+ - name: "leave/pending", data : {leaveApplicationId: leave._id}
+ - create a vercel.json udeer server
+ - {
+    "version": 2,
+    "builds": [
+        {
+            "src": "server.js",
+            "use": "@vercel/node",
+            "config": {
+                "includeFiles": [
+                    "dist/**"
+                ]
+            }
+        }
+    ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "server.js"
+        }
+    ]
+}
+ - Create another vercel.json under client with the code below
+ - {
+    "rewrites": [
+        {
+            "source": "/(.*)",
+            "destination": "/"
+        }
+    ]
+}
+ - register on vercel and deploy server 
+ - take the server url and sync app in inngest 
+ - install axios in client 
+ - create a .env under client add a vitebaseurl = 4000
+ - create a api folder undeer src and create axios.js 
+ - import axios and define api as axios.create({baseURL: (import.meta.env.VITE_BASE_URL || "http://localhost:4000")}) + "api"
+ - //Attach Auth token to all network requests
+api.interceptors.request.use((config) => {
+    const token = localStorage.getItem("token")
+    if(token) {
+        config.headers.Authorization = `Bearer ${token}`
+    }
+    return config
+}) 
+ - then export default api
+ - create a context folder with AuthContext.jsx 
+ - define AuthContext as createContext(null)
+ - export function AuthProvider({children}) {
+
+    value = {}
+
+    return <AuthContext.Provider value={}>
+        {children}
+    </AuthContext.Provider>
+}
+ - export function useAuth() {
+    const ctx = useContext(AuthContext)
+    if(!ctx) throw new Error("useAuth must be used within AuthProvider")
+    return ctx
+} 
+ - create state var user, token and loading = null , localStorage.getItem("token"), true
+ - define an async refreshSession function - define storedToken = .getItem("token)
+ - if not storedToken setUser and setToekn null and setLaoading false and return
+ - out of the if block input a trycatch block
+ - in the ty destructure data to await api.get("/auth/drddion") and setUser(data.user)
+ - in the catch block // Token is not valid , clear it
+ - localStorage.removeItem("item"), setuser(null), setToken(null)
+ - in the finally block setLoading to false
+ - call refreshSession when component loads 
+ - define login as async (email, password, role_type) 
+ - in login destructure data = await api.post("/auth/login", {email, password, role_type})
+ - localStorage.setItem("token", data.token), setToken(data.token), setUser(data.user), return data.user
+ - for the logout function removeItem token and settoken and set user to null 
+ - pass all user, token, loading, login ,logout, refreshSession inside value 
+ - import {AuthProvider} into main.jsx and wrap App with it 
+ - in the loginform.jsx - import useAuth() and destructure login 
+ - define navigate = usenavigate()
+ - in the handlesubmit function seterror(""), setloading true 
+ - add a trycatch - in the try block await login(email, password, role_type) - navigate("/dashboard)
+ - in the catch block - toast.error(error.response?.data.error || error.message || "Login Failed")
+ - in the finally block - setLoading false
+ - in layout.jsx import useAuth and destructure user and loading 
+ - if loading return Loading
+ - if not user return <Navigate to="/login"/>
+ - copy the above code to LogingLanding - change if user Navigate to="/"
+ - this is to ensure once logged in you can not manually go to the login page
+ - in the sidebar to update the information - import useAuth and destructure user,loading and logout
+ - in the useeffect - remove dummy data call the api api.get("/profile").then({data}) => 
+ - if data.firstname setusername to $data.firstname $data.lastname || "" .trim()
+ - in the navigationlist section - add loading ? return loader2icon with span loading... else 
+ - copu navitems.map in the else block
+ - in handlelogout call first logout()
+ - in dashbaord page - when page loads make the api call to get '/dashboard'.then - res => setdata res.data 
+ - .catch err toast.error(err.response?.data?.error || err.message) .finally setloadiing false 
+ - in employees page - clear the fetchemployees function - add a trycatch block 
+ - const url = selecteddept ? `/employees?department=${selectedDept}` : "/employees";
+ - const res = api.get(url) - setemployees(res.data)
+ - in the catch block - console.error "failed to fetch employees"
+ - finally setlaoding to false - dependencie selectedDept
+ - go to the employeeform - in the handlesumbit const formData = new FormData(e.currentTarget)
+ - if iseditmode const pwd = formdata.get("password")
+ - if not pwd formdata delete ("password")
+ - after that - in trycatch block - define url as iseditmode ? "/employees:${initialdata.id}" : "/employees"
+ - define method as iseditmode ? "put" "post" 
+ - then await api[method](url, formdata)
+ - then onSuccess ? onSuccess() : navigate("/employees")
+ - in the caatch block - toast.error(err.response?.data?.error || err.message)
+ - in the finally block setloading to false 
+ - in the EmployeeCard - in the handledelete function add a trycatch block
+ - await api.delete("/employees/${employee.id}") and then onDelete()
+ - catch the error
+ - In leave.jsx - import useAuth and destructure user 
+ - modify isAdmin to user?.role === "ADMIN"
+ - add an async to fetchleaves - remove everything which relates to dummyData
+ - add a trycatch block - const res = await api.get('/leave'); 
+ - and setLeaves to res.data.data || []
+ - if res.data.employee?.isDeleted return setIsDeleted(true)
+ - in the catch - toast.error(error?.response?.data.error || error.message)
+ - in the finally - setLoading to true 
+ - in the ApplyLeaveModal - in the handleSubmit function set loading to true 
+ - define formData 
+ - const data = Object.fromEntries(formData.entries())
+ - trycatch - in the try block await api.post('/leave', data) - onsuccess(), onclose()
+ - in the catch blokck - toast.error(error?.response?.data.error || error.message)
+ - go to the submit button remove onclick onclose
+ - go to leavehistory - in the handlestatusupdate function - trycatch block 
+ - call api.patch(`/leave/${id}`, {status}) and onUpdate()
+ - in the catch block - toast.error(error?.response?.data.error || error.message)
+ - in the finally block - setprocessing none
+ - in the attendance.jsx - in the fetchdata - delete the dummy data 
+ - const res = await api.get( "/attendance") - const json = res.data 
+ - sethistory(res.data || [])
+ - if(json.employee?.isDeleted) setIsDeleted(true)
+ - in the catch block - toast.error(error?.response?.data.error || error.message) 
+ - in the finally block - setloding to false
+ - in the checkinbutton - ada a trycatch below await apipost("/attedance") - onAction()
+ - in the catch block toast.error(error?.response?.data.error || error.message)
+ - below setloading to true
+ - fix ischeckedIn to !!todayRecord?.checkIn; so that it shows checkout once checked in
+ - in the Payslip.jsx destructure user using useAuth 
+ - define isAdmin using user and role  
+ - in fetchpayslups - trycatch block 
+ - in the try res = await api.get("/payslips")
+ - setpayslips res.data.data || []
+ - in the catch block - toast and finally set loading to false
+ - in the generatepayslipform - in the handleSubmit function setloadiing true 
+ - define formdata = new FormData(e.currentTarget)
+ - define data as Object.fromEntries(formdata.entries())
+ - in the try block call api.post("/payslips", data) - then setisopen false - onsuccess()
+ - then toast in the catch block
+ - after the block set loading false and remove the onclick on the generate button
+ - in printpayslip - call the api when the component loads 
+ -     api.get(`/payslips/${id}`).then(
+      (res) => setPayslip(res.data)).catch(
+      console.error).finally(() => setLoading(false)
+    )
+ - in the settings page - trycatch block - define res as api.get("/profile")
+ - const profile = res.data - if profile setprofile(profile)
+ - in the catch block toast 
+ - finally setloading false
+ - in the profile form component - setlaoding to true - seterror and setmessage to ""
+ - define formdata = new FormData(e.currentTarget)
+ - in the try block = await api.post("/profile", formData)
+ - setmessage (... successfully)
+ - onsuccess()
+ - in the caatch block seterror (error?.response?.data.error || error.message)
+ - finally setloading false
+ - in the changepasswordmodal - handlesubmit - setloading true 
+ - setmessage({type "", text ""})
+ - const formData is new FormData(e.currentTarget)
+ - currentpassword formdata.get("currentpassword") - new password same 
+ - in the try block - const {data} = await api.post("/auth/change-password", {currentPassword, newPassword})
+ - if not data.success throw new Error(data.error || "Failed To Change Password")
+ - setmessage to type "success" and text ".... updated successfully" - e.target.reset()
+ - in the catch block - seterror({type "error", text error.message})
+ - finally setloading to false
+
+
+
+
+
+                                                                                                                                                                                                                            ]
