@@ -14,7 +14,7 @@ const LoginLanding = () => {
     {
       to: "/login/teacher",
       title: "Teacher Portal",
-      description: "View your profile, create tasks, score taks and set up events.",
+      description: "View your profile, create tasks, score tasks and set up events.",
       icon: UserIcon
     }
   ]
