@@ -80,7 +80,7 @@
 - create the admin dashboard componentt passing data as prop
 - create a stat array var for the stats we will display on the dashboard
 - copy the structure from employeedashboard and adjust it accordingly
-- mount the admindashboard on dashboard page 
+- mount the admindashboard on dashboard page
 - in employees, create a employees, loading state var
 - create a fetchemployees function using usecallback and aync with settime out
 - call this function whEn components load and pas in fetchemployees as dependencie of the useeefect
