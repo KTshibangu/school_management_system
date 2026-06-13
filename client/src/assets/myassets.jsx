@@ -25,10 +25,10 @@ export const TERMS = ["Term 1", "Term 2", "Term 3", "Term 4"];
 
 export const dummyAdminDashboardData = {
     role: "ADMIN",
-    totalTeachers: 12,
     totalStudents: 340,
+    totalTeachers: 12,
     totalClasses: 18,
-    pendingAssignments: 5,
+    totalSubjects: 12,
     announcementsThisMonth: 8,
     todayAttendanceRate: 94, // percentage
 };

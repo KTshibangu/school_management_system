@@ -67,7 +67,7 @@ const Sidebar = () => {
                         </div>
                         <div className='min-w-0'>
                             <p className='text-[13px] font-medium text-slate-200 truncate'>{userName}</p>
-                            <p className='text-[11px] text-slate-400 truncate'>{role === "ADMIN" ? "Administrator" : "Employee"}</p>
+                            <p className='text-[11px] text-slate-400 truncate'>{role === "ADMIN" ? "Administrator" : "Teacher"}</p>
                         </div>
                     </div>
                 </div>
@@ -82,7 +82,7 @@ const Sidebar = () => {
             <div className='flex-1 px-3 space-y-0.5 overflow-y-auto'>
                 {
                     navItems.map((item) => {
-                        const isActive = pathname.startsWith(item.href)
+                        const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
                         return (
                             <Link key={item.name} to={item.href} className={`group flex items-center gap-3 px-3 py-2.5 rounded-md
                             text-[13px] font-medium transition-all duration-150 relative ${isActive ? 
