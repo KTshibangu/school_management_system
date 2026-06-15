@@ -9,7 +9,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    setData(dummyTeacherDashboardData)
+    setData(dummyAdminDashboardData)
     setTimeout(() => {
       setLoading(false)
     }, 1000);

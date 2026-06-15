@@ -12,6 +12,7 @@ import Scores from './pages/Scores'
 import Events from './pages/Events'
 import Settings from './pages/Settings'
 import LoginForm from './components/LoginForm'
+import Students from './pages/Students'
 
 
 const App = () => {
@@ -29,6 +30,7 @@ const App = () => {
           <Route path='/teachers' element={<Teachers/>}/>
           <Route path='/classes' element={<Classes/>}/>
           <Route path='/subjects' element={<Subjects/>}/>
+          <Route path='/students' element={<Students/>}/>
           <Route path='/tasks' element={<Tasks/>}/>
           <Route path='/scores' element={<Scores/>}/>
           <Route path='/events' element={<Events/>}/>
