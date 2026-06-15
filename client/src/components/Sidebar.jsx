@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { dummyProfileData } from '../assets/myassets'
-import { BookOpen, BuildingIcon, Calendar, CheckSquare, ChevronRightIcon, ClipboardCheck, LayoutGridIcon, LogOutIcon, MenuIcon, Notebook, School, Settings, UserIcon, XIcon } from 'lucide-react'
+import { Users, BookOpen, BuildingIcon, Calendar, CheckSquare, ChevronRightIcon, ClipboardCheck, LayoutGridIcon, LogOutIcon, MenuIcon, Notebook, School, Settings, UserIcon, XIcon } from 'lucide-react'
 
 const Sidebar = () => {
     const { pathname } = useLocation()
@@ -17,7 +17,7 @@ const Sidebar = () => {
         setMobileOpen(false)
     }, [pathname])
 
-    const role = "" || "EMPLOYEE"
+    const role = "ADMIN" || "EMPLOYEE"
 
     const navItems = [
         { name: "Dashboard", href: "/dashboard", icon: LayoutGridIcon },
@@ -30,6 +30,7 @@ const Sidebar = () => {
         role === "ADMIN" ?
             { name: "Subjects", href: "/subjects", icon: BookOpen } :
             { name: "Events", href: "/events", icon: Calendar },
+        { name: "Students", href: "/students", icon: Users },
         { name: "Settings", href: "/settings", icon: Settings }
     ]
 
