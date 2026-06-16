@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { SUBJECTS } from '../assets/myassets'
+import { SUBJECTS, CLASSES } from '../assets/myassets'
 import { Loader2Icon } from 'lucide-react'
 
 
@@ -9,10 +9,26 @@ const TeacherForm = ({ initialData, onSuccess, onCancel }) => {
 
     const [loading, setLoading] = useState(false)
     const isEditMode = !!initialData
+    const [selectedClasses, setSelectedClasses] = useState(initialData?.classesAssigned || []);
+
+    const toggleClass = (className) => {
+        setSelectedClasses((prev) =>
+            prev.includes(className)
+                ? prev.filter((c) => c !== className)
+                : [...prev, className]
+        );
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault()
     }
+
+    useEffect(() => {
+        if (initialData?.classesAssigned) {
+            setSelectedClasses(initialData.classesAssigned);
+        }
+    }, [initialData]);
+
     return (
         <form onSubmit={handleSubmit} className='space-y-6 max-w-3xl animate-fade-in'>
             {/* Personal Information */}
@@ -38,8 +54,8 @@ const TeacherForm = ({ initialData, onSuccess, onCancel }) => {
                         <select name="subject" defaultValue={initialData?.subject}>
                             <option value="">Select Subject</option>
                             {SUBJECTS.map((subject) => (
-                                <option key={subject} value={subject}>
-                                    {subject}
+                                <option key={subject.code} value={subject.name}>
+                                    {subject.name}
                                 </option>
                             ))}
                         </select>
@@ -58,6 +74,29 @@ const TeacherForm = ({ initialData, onSuccess, onCancel }) => {
                         <textarea name='bio' rows={3} defaultValue={initialData?.bio} className='resize-none'
                             placeholder='Brief Description...' />
                     </div>
+
+                    <div className='sm:col-span-2'>
+                        <label className='block mb-2 text-sm text-slate-700'>Classes Assigned</label>
+                        <div className='flex flex-wrap gap-2'>
+                            {CLASSES.map((cl) => {
+                                const isSelected = selectedClasses.includes(cl);
+                                return (
+                                    <label key={cl} className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm border 
+                                    cursor-pointer transition-colors select-none ${isSelected ? 'bg-indigo-50 border-indigo-300 text-indigo-700'
+                                            : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'}`}>
+                                        <input type='checkbox' name='classesAssigned' value={cl} checked={isSelected}
+                                            onChange={() => toggleClass(cl)} className='sr-only' />
+                                        {cl}
+                                    </label>
+                                );
+                            })}
+                        </div>
+                        {selectedClasses.length === 0 && (
+                            <p className='mt-2 text-xs text-slate-400'>No classes selected yet</p>
+                        )}
+                        <input type='hidden' name='classesAssigned' value={selectedClasses.join(',')} />
+                    </div>
+
                     {
                         isEditMode && (
                             <div>
@@ -103,8 +142,8 @@ const TeacherForm = ({ initialData, onSuccess, onCancel }) => {
 
             {/* buttons */}
             <div className='flex flex-col-reverse sm:flex-row justify-end gap-3 pt-2'>
-                <button onClick={() => (onCancel ? onCancel() : navigate(-1))} type='button' 
-                className='btn-secondary cursor-pointer'>
+                <button onClick={() => (onCancel ? onCancel() : navigate(-1))} type='button'
+                    className='btn-secondary cursor-pointer'>
                     Cancel
                 </button>
                 <button type='submit' disabled={loading} className='btn-primary flex items-center 
