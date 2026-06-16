@@ -21,7 +21,7 @@ const Teachers = () => {
 
   useEffect(() => {
     fetchTeachers()
-  }, [])
+  }, [fetchTeachers])
 
   const filtered = teachers.filter((t) => `${t.firstName} ${t.lastName}`.toLowerCase().includes(search.toLowerCase()))
 
@@ -103,7 +103,7 @@ const Teachers = () => {
         )
       }
 
-      {/* Edit Employee Modal */}
+      {/* Edit Teacher Modal */}
       {
         editTeacher && (
           <div onClick={() => setEditTeacher(null)} className='fixed bg-black/40 backdrop-blur-sm inset-0 z-50 flex items-start
