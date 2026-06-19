@@ -79,14 +79,14 @@ const TeacherForm = ({ initialData, onSuccess, onCancel }) => {
                         <label className='block mb-2 text-sm text-slate-700'>Classes Assigned</label>
                         <div className='flex flex-wrap gap-2'>
                             {CLASSES.map((cl) => {
-                                const isSelected = selectedClasses.includes(cl);
+                                const isSelected = selectedClasses.includes(cl.name);
                                 return (
-                                    <label key={cl} className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm border 
+                                    <label key={cl.name} className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm border 
                                     cursor-pointer transition-colors select-none ${isSelected ? 'bg-indigo-50 border-indigo-300 text-indigo-700'
                                             : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'}`}>
-                                        <input type='checkbox' name='classesAssigned' value={cl} checked={isSelected}
-                                            onChange={() => toggleClass(cl)} className='sr-only' />
-                                        {cl}
+                                        <input type='checkbox' name='classesAssigned' value={cl.name} checked={isSelected}
+                                            onChange={() => toggleClass(cl.name)} className='sr-only' />
+                                        {cl.name}
                                     </label>
                                 );
                             })}

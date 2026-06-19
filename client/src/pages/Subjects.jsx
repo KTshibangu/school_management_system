@@ -8,20 +8,9 @@ import SubjectForm from '../components/SubjectForm'
 const Subjects = () => {
   const [subjects, setSubjects] = useState([])
   const [loading, setLoading] = useState(true)
-  const [search, setSearch] = useState("")
   const [editSubject, setEditSubject] = useState(null)
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [selectedGrade, setSelectedGrade] = useState('ALL');
-
-  const gradeLevels = useMemo(() => {
-    const unique = [...new Set(SUBJECTS.map((s) => s.gradeLevels))];
-    return unique.sort((a, b) => a - b);
-  }, []);
-
-  const filteredSubjects = useMemo(() => {
-    if (selectedGrade === 'ALL') return SUBJECTS;
-    return SUBJECTS.filter((s) => s.gradeLevels === selectedGrade);
-  }, [selectedGrade]);
 
   const fetchSubjects = useCallback(async () => {
     setLoading(true)
@@ -30,6 +19,16 @@ const Subjects = () => {
       setLoading(false)
     }, 1000);
   }, [])
+
+  const gradeLevels = useMemo(() => {
+    const unique = [...new Set(subjects.map((s) => s.gradeLevels))];
+    return unique.sort((a, b) => a - b);
+  }, [subjects]);
+
+  const filteredSubjects = useMemo(() => {
+    if (selectedGrade === 'ALL') return subjects;
+    return subjects.filter((s) => s.gradeLevels === selectedGrade);
+  }, [selectedGrade, subjects]);
 
   useEffect(() => {
     fetchSubjects()
