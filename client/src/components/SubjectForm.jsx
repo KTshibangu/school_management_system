@@ -1,5 +1,6 @@
-import {React, useState} from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Loader2Icon } from 'lucide-react'
 
 const SubjectForm = ({ initialData, onSuccess, onCancel }) => {
     const navigate = useNavigate()
@@ -12,7 +13,6 @@ const SubjectForm = ({ initialData, onSuccess, onCancel }) => {
 
     return (
         <form onSubmit={handleSubmit} className='space-y-6 max-w-3xl animate-fade-in'>
-            {/* Personal Information */}
             <div className='card p-5 sm:p-6'>
                 <h3 className='font-medium mb-6 pb-4 border-b border-slate-100'>
                     Subject
@@ -43,6 +43,11 @@ const SubjectForm = ({ initialData, onSuccess, onCancel }) => {
                     <div className='sm:col-span-2'>
                         <label className='block mb-2'>Term 3 Chapters</label>
                         <textarea name='term3Chapters' rows={3} defaultValue={initialData?.term3Chapters} className='resize-none'
+                            placeholder='List Chapters (comma separated)' />
+                    </div>
+                    <div className='sm:col-span-2'>
+                        <label className='block mb-2'>Term 4 Chapters</label>
+                        <textarea name='term4Chapters' rows={3} defaultValue={initialData?.term4Chapters} className='resize-none'
                             placeholder='List Chapters (comma separated)' />
                     </div>
                 </div>

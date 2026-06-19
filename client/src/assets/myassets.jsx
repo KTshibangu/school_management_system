@@ -171,15 +171,18 @@ export const CLASSES = [
     {
         name: "Grade 8A",
         gradeLevels: 8,
-        subjectsTaught: ["Mathematics, English Language, Geography, History, Arts & Culture"]
+        subjectsAllocated: ["MATH-8", "ENG-8", "GEO-8", "HIST-8", "AC-8"],
     },
     {
         name: "Grade 8B",
         gradeLevels: 8,
-        subjectsTaught: ["Mathematics, English Language, Geography, History, Arts & Culture"]
+        subjectsAllocated: ["MATH-8", "ENG-8", "GEO-8", "HIST-8", "AC-8"],
     },
-
-
+    {
+        name: "Grade 9A",
+        gradeLevels: 9,
+        subjectsAllocated: ["MATH-9", "ENG-9", "GEO-9", "HIST-9", "AC-9"],
+    },
 ];
 
 export const TERMS = ["Term 1", "Term 2", "Term 3", "Term 4"];
