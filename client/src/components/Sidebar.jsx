@@ -17,13 +17,13 @@ const Sidebar = () => {
         setMobileOpen(false)
     }, [pathname])
 
-    const role = "ADMIN" || "EMPLOYEE"
+    const role = "" || "EMPLOYEE"
 
     const navItems = [
         { name: "Dashboard", href: "/dashboard", icon: LayoutGridIcon },
         role === "ADMIN" ?
             { name: "Teachers", href: "/teachers", icon: UserIcon } :
-            { name: "Tasks", href: "/tasks", icon: CheckSquare },
+            { name: "Assessments", href: "/assessments", icon: CheckSquare },
         role === "ADMIN" ?
             { name: "Classes", href: "/classes", icon: School } :
             { name: "Scores", href: "/scores", icon: ClipboardCheck },

@@ -1,5 +1,4 @@
-import React, { useCallback } from 'react'
-import { useState, useMemo, useEffect } from 'react'
+import React, { useCallback, useState, useMemo, useEffect } from 'react'
 import { dummyStudentData } from '../assets/myassets'
 import { Plus, X } from 'lucide-react'
 import StudentCard from '../components/StudentCard'
