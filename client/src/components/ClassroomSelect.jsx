@@ -34,24 +34,29 @@ const ClassroomSelect = ({ value, onChange }) => {
             {open && (
                 <div className='absolute z-50 mt-1.5 w-full bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden'>
                     <ul className='max-h-60 overflow-y-auto py-1'>
-                        <li
-                            onClick={() => { onChange(''); setOpen(false) }}
-                            className='flex items-center justify-between px-4 py-2.5 text-sm text-slate-400 hover:bg-slate-50 cursor-pointer'
-                        >
-                            Select...
-                            {!value && <Check className='w-4 h-4 text-indigo-500' />}
+                        <li>
+                            <button
+                                type='button'
+                                onClick={() => { onChange(''); setOpen(false) }}
+                                className='flex items-center justify-between px-4 py-2.5 text-sm text-slate-400 hover:bg-slate-50 cursor-pointer'
+                            >
+                                Select...
+                                {!value && <Check className='w-4 h-4 text-indigo-500' />}
+                            </button>
                         </li>
                         {CLASSES.map((classItem) => {
                             const isSelected = value === classItem.name
                             return (
-                                <li
-                                    key={classItem.name}
-                                    onClick={() => { onChange(classItem.name); setOpen(false) }}
-                                    className={`flex items-center justify-between px-4 py-2.5 text-sm cursor-pointer transition-colors
-                                    ${isSelected ? 'bg-indigo-50 text-indigo-700' : 'text-slate-700 hover:bg-slate-50'}`}
-                                >
-                                    {`${classItem.name} (${classItem.gradeLevels})`}
-                                    {isSelected && <Check className='w-4 h-4 text-indigo-500' />}
+                                <li key={classItem.name}>
+                                    <button
+                                        type='button'
+                                        onClick={() => { onChange(classItem.name); setOpen(false) }}
+                                        className={`flex items-center justify-between px-4 py-2.5 text-sm cursor-pointer transition-colors
+                                        ${isSelected ? 'bg-indigo-50 text-indigo-700' : 'text-slate-700 hover:bg-slate-50'}`}
+                                    >
+                                        {`${classItem.name} (${classItem.gradeLevels})`}
+                                        {isSelected && <Check className='w-4 h-4 text-indigo-500' />}
+                                    </button>
                                 </li>
                             )
                         })}

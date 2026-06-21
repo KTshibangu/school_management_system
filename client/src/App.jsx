@@ -7,7 +7,7 @@ import Dashboard from './pages/Dashboard'
 import Teachers from './pages/Teachers'
 import Classes from './pages/Classes'
 import Subjects from './pages/Subjects'
-import Tasks from './pages/Tasks'
+import Assessments from './pages/Assessments'
 import Scores from './pages/Scores'
 import Events from './pages/Events'
 import Settings from './pages/Settings'
@@ -31,7 +31,7 @@ const App = () => {
           <Route path='/classes' element={<Classes/>}/>
           <Route path='/subjects' element={<Subjects/>}/>
           <Route path='/students' element={<Students/>}/>
-          <Route path='/tasks' element={<Tasks/>}/>
+          <Route path='/assessments' element={<Assessments/>}/>
           <Route path='/scores' element={<Scores/>}/>
           <Route path='/events' element={<Events/>}/>
           <Route path='/settings' element={<Settings/>}/>

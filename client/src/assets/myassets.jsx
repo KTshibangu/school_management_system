@@ -185,6 +185,8 @@ export const CLASSES = [
     },
 ];
 
+export const ASSESSMENT_TYPES = ['Test', 'Exam', 'Assignment', 'Project', 'Practical']
+
 export const TERMS = ["Term 1", "Term 2", "Term 3", "Term 4"];
 
 // ─────────────────────────────────────────────
@@ -225,6 +227,8 @@ export const dummyProfileData = {
     lastName: "Nkosi",
     email: "sarah.nkosi@school.edu.za",
     image: null,
+    bio: "Passionate about making maths accessible to every learner.",
+    isDeleted: false,
     role: "TEACHER",
 };
 
@@ -493,6 +497,8 @@ export const dummyAssignmentData = [
         subject: "Mathematics",
         className: "Grade 10A",
         description: "Complete all exercises on quadratic equations from Chapter 5. Show all working.",
+        term: "Term 1",
+        assessmentType: "Test",
         dueDate: "2026-06-15T23:59:00.000Z",
         totalMarks: 50,
         status: "ACTIVE",
