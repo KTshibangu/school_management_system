@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useMemo } from 'react'
-import { Plus, X } from 'lucide-react'
+import { Plus, X, PencilIcon, Trash2Icon } from 'lucide-react'
 import { dummyGradeData, CLASSES, TERMS, dummyStudentData } from '../assets/myassets'
 import { getGradeDisplay } from '../assets/myassets'
 import ScoreForm from '../components/ScoreForm'
@@ -10,26 +10,32 @@ const classNames = CLASSES.map((c) => c.name)
 const studentNames = dummyStudentData.map((s) => `${s.firstName} ${s.lastName}`)
 
 const Scores = () => {
-    const [grades, setGrades] = useState([])
+    const [scores, setScores] = useState([])
     const [loading, setLoading] = useState(true)
     const [showCreateModal, setShowCreateModal] = useState(false)
+    const [editScores, setEditScores] = useState(null)
 
     const [filterGrade, setFilterGrade] = useState('')
     const [filterClass, setFilterClass] = useState('')
     const [filterTerm, setFilterTerm] = useState('')
     const [filterStudent, setFilterStudent] = useState('')
 
-    const fetchGrades = useCallback(async () => {
+    const fetchScores = useCallback(async () => {
         setLoading(true)
         setTimeout(() => {
-            setGrades(dummyGradeData)
+            setScores(dummyGradeData)
             setLoading(false)
         }, 1000)
     }, [])
 
-    useEffect(() => { fetchGrades() }, [fetchGrades])
+    const handleDelete = async () => {
+        if (!confirm("Are you want to delete this subject"))
+            return;
+    }
 
-    
+    useEffect(() => { fetchScores() }, [fetchScores])
+
+
     useEffect(() => { setFilterClass('') }, [filterGrade])
 
     const filteredClassOptions = CLASSES
@@ -37,7 +43,7 @@ const Scores = () => {
         .map((c) => c.name)
 
     const filteredGrades = useMemo(() => {
-        return grades.filter((g) => {
+        return scores.filter((g) => {
             const studentName = g.student
                 ? `${g.student.firstName} ${g.student.lastName}`
                 : ''
@@ -47,7 +53,7 @@ const Scores = () => {
             const matchStudent = !filterStudent || studentName === filterStudent
             return matchGrade && matchClass && matchTerm && matchStudent
         })
-    }, [grades, filterGrade, filterClass, filterTerm, filterStudent])
+    }, [scores, filterGrade, filterClass, filterTerm, filterStudent])
 
     const modalShell = (title, subtitle, content, onClose) => (
         <div onClick={onClose} className='fixed bg-black/40 backdrop-blur-sm inset-0 z-50 flex 
@@ -74,8 +80,8 @@ const Scores = () => {
             {/* Header */}
             <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8'>
                 <div>
-                    <h1 className='page-tilte'>Scores</h1>
-                    <p className='page-subtitle'>Capture and track student grades</p>
+                    <h1 className='page-title'>Scores</h1>
+                    <p className='page-subtitle'>Capture and track student scores</p>
                 </div>
                 <button onClick={() => setShowCreateModal(true)}
                     className='btn-primary flex items-center gap-2 w-full sm:w-auto justify-center cursor-pointer'>
@@ -128,13 +134,14 @@ const Scores = () => {
                                     <th>Score</th>
                                     <th>Percent</th>
                                     <th>Status</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {filteredGrades.length === 0 ? (
                                     <tr>
                                         <td colSpan={7} className='text-center text-slate-400 py-10'>
-                                            No grades found
+                                            No scores found
                                         </td>
                                     </tr>
                                 ) : (
@@ -161,6 +168,18 @@ const Scores = () => {
                                                         {grade}
                                                     </span>
                                                 </td>
+                                                <td className='flex items-center gap-2'>
+                                                    <button onClick={() => setEditScores(g)}
+                                                        className='p-2.5 bg-white/90 backdrop-blur-sm text-slate-700 hover:text-indigo-600 rounded-xl 
+                                                    shadow-lg transition-all hover:scale-105 cursor-pointer'>
+                                                        <PencilIcon className='w-4 h-4' />
+                                                    </button>
+
+                                                    <button onClick={handleDelete} className='p-2.5 bg-white/90 backdrop-blur-sm text-slate-700 hover:text-rose-600 
+                                                rounded-xl shadow-lg transition-all hover:scale-105 disabled:opacity-50'>
+                                                        <Trash2Icon className='w-4 h-4' />
+                                                    </button>
+                                                </td>
                                             </tr>
                                         )
                                     })
@@ -176,10 +195,22 @@ const Scores = () => {
                 'Capture Grade',
                 'Record a student grade for an assessment',
                 <ScoreForm
-                    onSuccess={() => { setShowCreateModal(false); fetchGrades() }}
+                    onSuccess={() => { setShowCreateModal(false); fetchScores() }}
                     onCancel={() => setShowCreateModal(false)}
                 />,
                 () => setShowCreateModal(false)
+            )}
+
+            {/* Edit Modal */}
+            {editScores && modalShell(
+                'Edit Scores',
+                'Update Scores details',
+                <ScoreForm
+                    initialData={editScores}
+                    onSuccess={() => { setEditScores(null); fetchScores() }}
+                    onCancel={() => setEditScores(null)}
+                />,
+                () => setEditScores(null)
             )}
         </div>
     )

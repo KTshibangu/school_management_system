@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useMemo } from 'react'
-import { Plus, X } from 'lucide-react'
+import { Plus, X, PencilIcon, Trash2Icon } from 'lucide-react'
 import { dummyAssignmentData, CLASSES, TERMS, ASSESSMENT_TYPES } from '../assets/myassets'
 import AssessmentForm from '../components/AssessmentForm'
 import AssessmentSelect from '../components/AssessmentSelect'
@@ -23,6 +23,11 @@ const Assessments = () => {
             setLoading(false)
         }, 1000)
     }, [])
+
+    const handleDelete = async () => {
+        if (!confirm("Are you want to delete this subject"))
+            return;
+    }
 
     useEffect(() => { fetchAssessments() }, [fetchAssessments])
 
@@ -60,7 +65,7 @@ const Assessments = () => {
             {/* Header */}
             <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8'>
                 <div>
-                    <h1 className='page-tilte'>Assessments</h1>
+                    <h1 className='page-title'>Assessments</h1>
                     <p className='page-subtitle'>Manage and track assessments</p>
                 </div>
                 <button onClick={() => setShowCreateModal(true)}
@@ -123,10 +128,16 @@ const Assessments = () => {
                                             <td>{new Date(a.dueDate).toLocaleDateString('en-ZA', {
                                                 day: 'numeric', month: 'short', year: 'numeric'
                                             })}</td>
-                                            <td>
+                                            <td className='flex items-center gap-2'>
                                                 <button onClick={() => setEditAssessment(a)}
-                                                    className='text-xs text-indigo-600 hover:underline cursor-pointer'>
-                                                    Edit
+                                                    className='p-2.5 bg-white/90 backdrop-blur-sm text-slate-700 hover:text-indigo-600 rounded-xl 
+                                                    shadow-lg transition-all hover:scale-105 cursor-pointer'>
+                                                    <PencilIcon className='w-4 h-4' />
+                                                </button>
+
+                                                <button onClick={handleDelete} className='p-2.5 bg-white/90 backdrop-blur-sm text-slate-700 hover:text-rose-600 
+                                                rounded-xl shadow-lg transition-all hover:scale-105 disabled:opacity-50'>
+                                                    <Trash2Icon className='w-4 h-4' />
                                                 </button>
                                             </td>
                                         </tr>

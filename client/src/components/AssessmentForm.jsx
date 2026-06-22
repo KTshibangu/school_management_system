@@ -10,7 +10,7 @@ const AssessmentForm = ({ initialData, onSuccess, onCancel }) => {
     const [loading, setLoading] = useState(false)
     const isEditMode = !!initialData
 
-    const [type, setType] = useState(initialData?.type || '')
+    const [type, setType] = useState(initialData?.assessmentType || '')
     const [term, setTerm] = useState(initialData?.term || '')
     const [classes, setClasses] = useState(initialData?.className || '')
 
@@ -18,17 +18,6 @@ const AssessmentForm = ({ initialData, onSuccess, onCancel }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        const formData = new FormData(e.target)
-        const data = {
-            title: formData.get('title'),
-            description: formData.get('description'),
-            type,
-            term,
-            classes,
-            dueDate: formData.get('dueDate'),
-            maxScore: formData.get('maxScore'),
-        }
-        console.log(data) // replace with API call
     }
 
     return (
@@ -72,13 +61,13 @@ const AssessmentForm = ({ initialData, onSuccess, onCancel }) => {
             <div>
                 <label className='block text-sm text-slate-600 mb-1.5'>Due Date</label>
                 <input type='datetime-local' name='dueDate' required
-                    defaultValue={initialData?.dueDate} />
+                    defaultValue={initialData?.dueDate.slice(0, 16)} />
             </div>
 
             <div>
                 <label className='block text-sm text-slate-600 mb-1.5'>Max Score</label>
                 <input type='number' name='maxScore' required min={1}
-                    defaultValue={initialData?.maxScore} placeholder='e.g. 100' />
+                    defaultValue={initialData?.totalMarks} placeholder='e.g. 100' />
             </div>
 
             <div className='flex flex-col-reverse sm:flex-row justify-end gap-3 pt-2'>
