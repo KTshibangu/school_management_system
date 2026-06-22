@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Loader2Icon } from 'lucide-react'
 import { CLASSES, dummyStudentData, dummyAssignmentData } from '../assets/myassets'
 import ScoreSelect from './ScoreSelect'
 
-const ScoreForm = ({ initialData ,onSuccess, onCancel }) => {
+const ScoreForm = ({ initialData, onSuccess, onCancel }) => {
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false)
     const isEditMode = !!initialData
@@ -13,6 +13,12 @@ const ScoreForm = ({ initialData ,onSuccess, onCancel }) => {
     const [selectedClass, setSelectedClass] = useState('')
     const [selectedAssessment, setSelectedAssessment] = useState('')
     const [selectedStudent, setSelectedStudent] = useState('')
+    const [score, setScore] = useState('')
+    const [maxScore, setMaxScore] = useState('')
+    const [remarks, setRemarks] = useState('')
+
+
+    const isInitializing = useRef(false)
 
     const gradeOptions = [...new Set(CLASSES.map((c) => String(c.gradeLevels)))].sort()
 
@@ -29,27 +35,50 @@ const ScoreForm = ({ initialData ,onSuccess, onCancel }) => {
         .map((a) => a.title)
 
     useEffect(() => {
+        if (!initialData) return
+        isInitializing.current = true
+
+        const gradeNum = initialData.student?.grade?.replace('Grade ', '').trim() || ''
+        const className = initialData.student?.className || ''
+        const studentName = initialData.student
+            ? `${initialData.student.firstName} ${initialData.student.lastName}`
+            : ''
+
+        setSelectedGrade(gradeNum)
+        setSelectedClass(className)
+        setSelectedAssessment(initialData.assessmentType || '')
+        setSelectedStudent(studentName)
+        setScore(String(initialData.marksObtained ?? ''))
+        setMaxScore(String(initialData.totalMarks ?? ''))
+        setRemarks(initialData.remarks || '')
+
+
+        setTimeout(() => { isInitializing.current = false }, 0)
+    }, [initialData])
+
+    useEffect(() => {
+        if (isInitializing.current) return
         setSelectedClass('')
         setSelectedAssessment('')
         setSelectedStudent('')
     }, [selectedGrade])
 
     useEffect(() => {
+        if (isInitializing.current) return
         setSelectedAssessment('')
         setSelectedStudent('')
     }, [selectedClass])
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        const formData = new FormData(e.target)
         const data = {
             grade: selectedGrade,
             className: selectedClass,
             assessment: selectedAssessment,
             student: selectedStudent,
-            score: formData.get('score'),
-            maxScore: formData.get('maxScore'),
-            remarks: formData.get('remarks'),
+            score,
+            maxScore,
+            remarks,
         }
         console.log(data) // replace with API call
     }
@@ -63,7 +92,6 @@ const ScoreForm = ({ initialData ,onSuccess, onCancel }) => {
                 onChange={setSelectedGrade}
                 placeholder='Select grade...'
             />
-
             <ScoreSelect
                 label='Class'
                 options={classOptions}
@@ -71,7 +99,6 @@ const ScoreForm = ({ initialData ,onSuccess, onCancel }) => {
                 onChange={setSelectedClass}
                 placeholder={selectedGrade ? 'Select class...' : 'Select a grade first'}
             />
-
             <ScoreSelect
                 label='Assessment'
                 options={assessmentOptions}
@@ -79,7 +106,6 @@ const ScoreForm = ({ initialData ,onSuccess, onCancel }) => {
                 onChange={setSelectedAssessment}
                 placeholder={selectedClass ? 'Select assessment...' : 'Select a class first'}
             />
-
             <ScoreSelect
                 label='Student'
                 options={studentOptions}
@@ -90,20 +116,32 @@ const ScoreForm = ({ initialData ,onSuccess, onCancel }) => {
 
             <div>
                 <label className='block text-sm text-slate-600 mb-1.5'>Score</label>
-                <input type='number' name='score' required min={0}
-                    placeholder='e.g. 78' />
+                <input
+                    type='number' min={0} required
+                    value={score}
+                    onChange={(e) => setScore(e.target.value)}
+                    placeholder='e.g. 78'
+                />
             </div>
 
             <div>
                 <label className='block text-sm text-slate-600 mb-1.5'>Max Score</label>
-                <input type='number' name='maxScore' required min={1}
-                    placeholder='e.g. 100' />
+                <input
+                    type='number' min={1} required
+                    value={maxScore}
+                    onChange={(e) => setMaxScore(e.target.value)}
+                    placeholder='e.g. 100'
+                />
             </div>
 
             <div>
                 <label className='block text-sm text-slate-600 mb-1.5'>Remarks</label>
-                <textarea name='remarks' rows={4} className='resize-none'
-                    placeholder='Optional remarks about this grade...' />
+                <textarea
+                    rows={4} className='resize-none'
+                    value={remarks}
+                    onChange={(e) => setRemarks(e.target.value)}
+                    placeholder='Optional remarks about this grade...'
+                />
             </div>
 
             <div className='flex flex-col-reverse sm:flex-row justify-end gap-3 pt-2'>

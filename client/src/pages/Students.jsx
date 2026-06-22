@@ -10,6 +10,7 @@ const Students = () => {
   const [editStudents, setEditStudents] = useState(null)
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [selectedGrade, setSelectedGrade] = useState('ALL');
+  const isAdmin = false
 
   const fetchStudents = useCallback(async () => {
     setLoading(true)
@@ -40,13 +41,21 @@ const Students = () => {
       <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8'>
         <div>
           <h1 className='page-tilte'>Students</h1>
-          <p className='page-subtitle'>Add and edit Students</p>
+          <p className='page-subtitle'>
+            {
+              isAdmin ? "Add and edit Students" : "View Registered students"
+            }
+          </p>
         </div>
 
-        <button onClick={() => setShowCreateModal(true)} className='btn-primary flex items-center gap-2 w-full 
+        {
+          isAdmin && (
+            <button onClick={() => setShowCreateModal(true)} className='btn-primary flex items-center gap-2 w-full 
         sm:w-auto justify-center cursor-pointer'>
-          <Plus size={16} /> Add Students
-        </button>
+              <Plus size={16} /> Add Students
+            </button>
+          )
+        }
       </div>
 
       {/* Filter Section */}
@@ -100,7 +109,8 @@ const Students = () => {
                 </thead>
                 <tbody>
                   {filteredStudents.map((student) => (
-                    <StudentCard key={student._id} students={student} onDelete={fetchStudents} onEdit={setEditStudents} />
+                    <StudentCard key={student._id} students={student} 
+                    isAdmin={isAdmin} onDelete={fetchStudents} onEdit={setEditStudents} />
                   ))}
                 </tbody>
               </table>
@@ -148,8 +158,16 @@ const Students = () => {
             w-full max-w-3xl my-8 animate-fade-in'>
                 <div className='flex items-center justify-between p-6 pb-0'>
                   <div>
-                    <h2 className='text-lg font-semibold text-slate-900'>Edit Student</h2>
-                    <p className='text-sm text-slate-500 mt-0.5'>Update Student details</p>
+                    <h2 className='text-lg font-semibold text-slate-900'>
+                      {
+                        isAdmin ? "Edit Student" : "View Student"
+                      }
+                    </h2>
+                    <p className='text-sm text-slate-500 mt-0.5'>
+                      {
+                        isAdmin ? "Update Student details" : "View Student details"
+                      }
+                    </p>
                   </div>
                   <button onClick={() => setEditStudents(null)} className='p-2 rounded-lg hover:bg-slate-100 transition-colors
                 text-slate-400 hover:text-slate-600'>
@@ -157,7 +175,7 @@ const Students = () => {
                   </button>
                 </div>
                 <div className='p-6'>
-                  <StudentForm initialData={editStudents}
+                  <StudentForm initialData={editStudents} isAdmin={isAdmin}
                     onSuccess={() => {
                       setEditStudents(null)
                       fetchStudents()

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { Loader2Icon } from 'lucide-react'
 import ClassroomSelect from './ClassroomSelect'
 
-const StudentForm = ({ initialData, onSuccess, onCancel }) => {
+const StudentForm = ({ initialData, isAdmin, onSuccess, onCancel }) => {
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false)
     const isEditMode = !!initialData
@@ -69,13 +69,17 @@ const StudentForm = ({ initialData, onSuccess, onCancel }) => {
                     className='btn-secondary cursor-pointer'>
                     Cancel
                 </button>
-                <button
-                    type='submit'
-                    disabled={loading}
-                    className='btn-primary flex items-center justify-center cursor-pointer'>
-                    {loading && <Loader2Icon className='w-4 h-4 mr-2 animate-spin' />}
-                    {isEditMode ? 'Update Student' : 'Create Student'}
-                </button>
+                {
+                    isAdmin && (
+                        <button
+                            type='submit'
+                            disabled={loading}
+                            className='btn-primary flex items-center justify-center cursor-pointer'>
+                            {loading && <Loader2Icon className='w-4 h-4 mr-2 animate-spin' />}
+                            {isEditMode ? 'Update Student' : 'Create Student'}
+                        </button>
+                    )
+                }
             </div>
         </form>
     )
