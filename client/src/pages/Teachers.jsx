@@ -32,7 +32,7 @@ const Teachers = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
-          <h1 className="page-tilte">Teachers</h1>
+          <h1 className="page-title">Teachers</h1>
           <p className="page-subtitle">Manage Teachers</p>
         </div>
 
@@ -68,7 +68,7 @@ const Teachers = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
           {filtered.length === 0 ? (
             <p className="col-span-full text-center py-16 text-slate-400 bg-white rounded-2xl border border-dashed border-slate-200">
-              No teachers fouund
+              No teachers found
             </p>
           ) : (
             filtered.map(f => (
@@ -144,7 +144,7 @@ const Teachers = () => {
                   Edit Teacher
                 </h2>
                 <p className="text-sm text-slate-500 mt-0.5">
-                  Update reacher details
+                  Update Teacher details
                 </p>
               </div>
               <button
