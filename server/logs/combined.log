@@ -1,0 +1,7 @@
+{"level":"info","message":"::1 - - [22/Jun/2026:16:12:34 +0000] \"GET / HTTP/1.1\" - - \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","service":"school-management"}
+{"level":"info","message":"::1 - - [22/Jun/2026:16:14:10 +0000] \"GET / HTTP/1.1\" - - \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","service":"school-management"}
+{"level":"info","message":"::1 - - [22/Jun/2026:16:19:00 +0000] \"GET / HTTP/1.1\" - - \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","service":"school-management"}
+{"level":"info","message":"::1 - - [22/Jun/2026:16:19:38 +0000] \"GET / HTTP/1.1\" - - \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","service":"school-management"}
+{"level":"info","message":"Hello from School-Management","service":"school-management"}
+{"level":"info","message":"::1 - - [22/Jun/2026:16:30:53 +0000] \"GET / HTTP/1.1\" 200 15 \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","service":"school-management"}
+{"level":"info","message":"::1 - - [22/Jun/2026:16:30:53 +0000] \"GET /favicon.ico HTTP/1.1\" 404 150 \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","service":"school-management"}
