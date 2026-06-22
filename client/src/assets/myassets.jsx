@@ -615,6 +615,73 @@ export const dummyAnnouncementData = [
 ];
 
 // ─────────────────────────────────────────────
+//  EVENTS DATA
+// ─────────────────────────────────────────────
+
+export const EVENT_TYPES = ['Assembly', 'Sports Day', 'Meeting', 'Workshop', 'Trip', 'Exam', 'Other']
+export const EVENT_AUDIENCE = ['ALL', 'TEACHERS', 'STUDENTS', 'Grade 8', 'Grade 9', 'Grade 10']
+export const EVENT_STATUSES = ['UPCOMING', 'ONGOING', 'COMPLETED', 'CANCELLED']
+
+export const dummyEventData = [
+    {
+        _id: "ev001a2b3c4d5e6f7a8b9c0",
+        title: "Term 2 Prize Giving Assembly",
+        description: "End of term prize giving ceremony for all students. Parents are welcome to attend.",
+        type: "Assembly",
+        audience: "ALL",
+        location: "School Hall",
+        startDate: "2026-06-27T09:00:00.000Z",
+        endDate: "2026-06-27T11:00:00.000Z",
+        status: "UPCOMING",
+        createdBy: "t001a2b3c4d5e6f7a8b9c0d1",
+        createdAt: "2026-06-06T08:00:00.000Z",
+        updatedAt: "2026-06-06T08:00:00.000Z",
+    },
+    {
+        _id: "ev002a2b3c4d5e6f7a8b9c0",
+        title: "Grade 8 & 9 Sports Day",
+        description: "Annual inter-house athletics competition for Grade 8 and 9 learners.",
+        type: "Sports Day",
+        audience: "STUDENTS",
+        location: "School Grounds",
+        startDate: "2026-07-10T08:00:00.000Z",
+        endDate: "2026-07-10T15:00:00.000Z",
+        status: "UPCOMING",
+        createdBy: "t002a2b3c4d5e6f7a8b9c0d2",
+        createdAt: "2026-06-05T08:00:00.000Z",
+        updatedAt: "2026-06-05T08:00:00.000Z",
+    },
+    {
+        _id: "ev003a2b3c4d5e6f7a8b9c0",
+        title: "Staff Development Workshop",
+        description: "Professional development session covering new CAPS curriculum updates.",
+        type: "Workshop",
+        audience: "TEACHERS",
+        location: "Staff Room",
+        startDate: "2026-06-11T14:00:00.000Z",
+        endDate: "2026-06-11T16:00:00.000Z",
+        status: "COMPLETED",
+        createdBy: "t001a2b3c4d5e6f7a8b9c0d1",
+        createdAt: "2026-06-01T08:00:00.000Z",
+        updatedAt: "2026-06-01T08:00:00.000Z",
+    },
+    {
+        _id: "ev004a2b3c4d5e6f7a8b9c0",
+        title: "Grade 10 Career Expo Trip",
+        description: "Educational trip to the Durban Career Expo for Grade 10 students.",
+        type: "Trip",
+        audience: "Grade 10",
+        location: "Durban ICC",
+        startDate: "2026-07-15T07:30:00.000Z",
+        endDate: "2026-07-15T16:00:00.000Z",
+        status: "UPCOMING",
+        createdBy: "t003a2b3c4d5e6f7a8b9c0d3",
+        createdAt: "2026-06-04T08:00:00.000Z",
+        updatedAt: "2026-06-04T08:00:00.000Z",
+    },
+]
+
+// ─────────────────────────────────────────────
 //  HELPER FUNCTIONS
 // ─────────────────────────────────────────────
 
@@ -630,6 +697,21 @@ export function getAttendanceStatusDisplay(status) {
     };
     return map[status] || { label: status, className: "bg-slate-100 text-slate-600" };
 }
+
+
+// Events status display
+
+export function getEventStatusDisplay(status) {
+    const map = {
+        UPCOMING:  { label: 'Upcoming',  className: 'bg-blue-100 text-blue-700 border-blue-200' },
+        ONGOING:   { label: 'Ongoing',   className: 'bg-emerald-100 text-emerald-700 border-emerald-200' },
+        COMPLETED: { label: 'Completed', className: 'bg-slate-100 text-slate-600 border-slate-200' },
+        CANCELLED: { label: 'Cancelled', className: 'bg-rose-100 text-rose-700 border-rose-200' },
+    }
+    return map[status] || { label: status, className: 'bg-slate-100 text-slate-600' }
+}
+
+
 
 /**
  * Converts a numeric percentage into a letter grade and badge class.
