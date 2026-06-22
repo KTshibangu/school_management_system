@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Loader2Icon } from 'lucide-react'
 import { CLASSES, dummyStudentData, dummyAssignmentData } from '../assets/myassets'
 import ScoreSelect from './ScoreSelect'
 
-const ScoreForm = ({ onSuccess, onCancel }) => {
+const ScoreForm = ({ initialData ,onSuccess, onCancel }) => {
+    const navigate = useNavigate()
     const [loading, setLoading] = useState(false)
+    const isEditMode = !!initialData
 
     const [selectedGrade, setSelectedGrade] = useState('')
     const [selectedClass, setSelectedClass] = useState('')
@@ -104,14 +107,14 @@ const ScoreForm = ({ onSuccess, onCancel }) => {
             </div>
 
             <div className='flex flex-col-reverse sm:flex-row justify-end gap-3 pt-2'>
-                <button type='button' onClick={onCancel}
+                <button type='button' onClick={() => (onCancel ? onCancel() : navigate(-1))}
                     className='btn-secondary cursor-pointer'>
                     Cancel
                 </button>
                 <button type='submit' disabled={loading}
                     className='btn-primary flex items-center justify-center cursor-pointer'>
                     {loading && <Loader2Icon className='w-4 h-4 mr-2 animate-spin' />}
-                    Capture Grade
+                    {isEditMode ? 'Update Grade' : 'Capture Grade'}
                 </button>
             </div>
         </form>

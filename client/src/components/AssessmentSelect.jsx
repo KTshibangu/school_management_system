@@ -31,24 +31,29 @@ const AssessmentSelect = ({ label, options, value, onChange, placeholder = 'Sele
             {open && (
                 <div className='absolute z-50 mt-1.5 w-full bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden'>
                     <ul className='max-h-60 overflow-y-auto py-1'>
-                        <li
-                            onClick={() => { onChange(''); setOpen(false) }}
-                            className='flex items-center justify-between px-4 py-2.5 text-sm text-slate-400 hover:bg-slate-50 cursor-pointer'
-                        >
-                            {placeholder}
-                            {!value && <Check className='w-4 h-4 text-indigo-500' />}
+                        <li>
+                            <button
+                                type='button'
+                                onClick={() => { onChange(''); setOpen(false) }}
+                                className='flex items-center justify-between px-4 py-2.5 text-sm text-slate-400 hover:bg-slate-50 cursor-pointer'
+                            >
+                                {placeholder}
+                                {!value && <Check className='w-4 h-4 text-indigo-500' />}
+                            </button>
                         </li>
                         {options.map((opt) => {
                             const isSelected = value === opt
                             return (
-                                <li
-                                    key={opt}
-                                    onClick={() => { onChange(opt); setOpen(false) }}
-                                    className={`flex items-center justify-between px-4 py-2.5 text-sm cursor-pointer transition-colors
+                                <li key={opt}>
+                                    <button
+                                        type='button'
+                                        onClick={() => { onChange(opt); setOpen(false) }}
+                                        className={`flex items-center justify-between px-4 py-2.5 text-sm cursor-pointer transition-colors
                                     ${isSelected ? 'bg-indigo-50 text-indigo-700' : 'text-slate-700 hover:bg-slate-50'}`}
-                                >
-                                    {opt}
-                                    {isSelected && <Check className='w-4 h-4 text-indigo-500' />}
+                                    >
+                                        {opt}
+                                        {isSelected && <Check className='w-4 h-4 text-indigo-500' />}
+                                    </button>
                                 </li>
                             )
                         })}
