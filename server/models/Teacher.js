@@ -44,11 +44,6 @@ const teacherSchema = new mongoose.Schema(
             type: [String],
             default: [],
         },
-        employmentStatus: {
-            type: String,
-            enum: ['ACTIVE', 'INACTIVE'],
-            default: 'ACTIVE',
-        },
         joinDate: {
             type: Date,
             required: true,
@@ -74,6 +69,6 @@ teacherSchema.pre(/^find/, function (next) {
     next()
 })
 
-const Teacher = mongoose.model('Teacher', teacherSchema)
+const Teacher = mongoose.models.Teacher || mongoose.model('Teacher', teacherSchema)
 
 export default Teacher
