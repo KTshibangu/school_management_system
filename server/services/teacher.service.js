@@ -2,6 +2,15 @@ import Teacher from "../models/Teacher.js"
 import User from "../models/User.js"
 import bcrypt from 'bcrypt'
 import logger from "../config/logger.js";
+import mongoose from "mongoose";
+
+/**
+ * TEMPLATE NOTE:
+ * Services must never import or reference req, res, or next.
+ * They receive plain arguments, return plain values, and throw plain Errors.
+ * HTTP status codes and res.json() belong exclusively in the controller.
+ */
+ 
 
 //GET Teachers
 // GET /api/teachers
@@ -92,59 +101,75 @@ export const createTeacher = async (data) => {
 //Update teacher
 // PUT /api/teacher/:id
 
-export const updateTeacher = async (req, res) => {
+export const updateTeacher = async (id, data) => {
+    const {
+        firstName, lastName, email, phone, password, role,
+        bio, subject, employeeCode, classesAssigned
+    } = data;
+
+    const teacher = await Teacher.findById(id);
+    if (!teacher) throw new Error("Teacher not found")
+
+    const session = await mongoose.startSession();
+    session.startTransaction()
+
     try {
-        const { id } = req.params;
-        const { firstName, lastName, email, phone, password, role, bio, subject, employeeCode, classesAssigned
-        } = req.body;
+        const teacherUpdate = {
+            ...(firstName !== undefined && { firstName }),
+            ...(lastName !== undefined && { lastName }),
+            ...(email !== undefined && { email }),
+            ...(phone !== undefined && { phone }),
+            ...(subject !== undefined && { subject }),
+            ...(employeeCode !== undefined && { employeeCode }),
+            ...(classesAssigned !== undefined && { classesAssigned }),
+            ...(bio !== undefined && { bio }),
+        };
 
-        const teacher = await Teacher.findByIdAndUpdate(id);
-        if (!teacher) return res.status(404).json({ error: "Teacher not found" })
+        const updatedTeacher = await Teacher.findByIdAndUpdate(
+            id,
+            teacherUpdate,
+            { new: true, runValidators: true, session }
+        )
 
-        await Teacher.findByIdAndUpdate(id, {
-            firstName,
-            lastName,
-            email,
-            phone,
-            subject,
-            employeeCode,
-            classesAssigned,
-            bio
-        })
+        const userUpdate = {
+            ...(email !== undefined && { email }),
+            ...(role !== undefined && { role }),
+            ...(password !== undefined && { password: await bcrypt.hash(password, 10) }),
+        }
 
-        // Update user record
-        const userUpdate = {}
-        if (email) userUpdate.email = email;
-        if (role) userUpdate.role = role;
-        if (password) userUpdate.password = await bcrypt.hash(password, 10);
-        await User.findByIdAndUpdate(teacher.userId, userUpdate)
+        if (Object.keys(userUpdate).length > 0) {
+            await User.findByIdAndUpdate(teacher.userId, userUpdate, { session });
+        }
 
-        return res.json({ success: true })
+        await session.commitTransaction()
+
+        logger.info(`Teacher ${updatedTeacher.email} updated successfully`);
+        return updatedTeacher;
 
     } catch (error) {
-        if (error.code === 11000) {
-            return res.status(400).json({ error: "Email already exists" })
-        }
-        logger.error("Update teacher error:", error)
-        return res.status(500).json({ error: "Failed to update teacher" })
+        await session.abortTransaction();
+        throw error;
+    } finally {
+        session.endSession()
     }
-
 }
 
 // DELETE teacher
 // DELETE /api/teacher/:id
-export const deleteTeacher = async (req, res) => {
+export const deleteTeacher = async (id) => {
     try {
-        const { id } = req.params;
-
-        const teacher = await Teacher.findById(id)
-        if (!teacher) return res.status(404).json({ error: "teacher Not Found" })
+        const teacher = await Teacher.findById(id);
+        if (!teacher) throw new Error("Teacher not found");
 
         teacher.isDeleted = true;
         await teacher.save()
-        return res.json({ success: true })
+
+        // deactivate the linked User account so they can no longer log in
+        await User.findByIdAndUpdate(teacher.userId, { isActive: false });
+
+    
+
     } catch (error) {
         logger.error("Delete teacher error:", error)
-        return res.status(500).json({ error: "Failed To Delete teacher" })
     }
 }

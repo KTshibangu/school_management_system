@@ -3,6 +3,19 @@ import { getTeachers, updateTeacher, createTeacher, deleteTeacher } from "../ser
 import { createTeacherSchema, updateTeacherSchema, mongoIdSchema } from "../validations/teacher.validation";
 import { formatValidationError } from "../utils/format";
 
+/**
+ * TEMPLATE NOTE:
+ * Controllers own the HTTP layer only — validate input, call the service,
+ * map return values / errors to HTTP responses. No DB logic lives here.
+ *
+ * Pattern for every handler:
+ *  1. Validate input (Zod)
+ *  2. Call service with plain data
+ *  3. Return HTTP response
+ *  4. Catch → map known error messages to status codes, default to 500
+ */
+
+
 export const fetchAllTeachers = async (req, res, next) => {
     try {
         logger.info("Getting teachers...")
@@ -15,6 +28,7 @@ export const fetchAllTeachers = async (req, res, next) => {
         });
     } catch (error) {
         logger.error(error)
+        next(error)
         return res.status(500).json({
             success: false,
             error: error.message,
@@ -27,7 +41,6 @@ export const postTeacher = async (req, res, next) => {
         logger.info("Creating teacher...")
 
         const validationResult = createTeacherSchema.safeParse(req.body)
-
         if (!validationResult.success) {
             return res.status(400).json({
                 error: 'Create validation failed',
@@ -35,7 +48,7 @@ export const postTeacher = async (req, res, next) => {
             });
         }
 
-        const teacher = await createTeacher(req.body);
+        const teacher = await createTeacher(validationResult.data);
 
         logger.info('Teacher created successfully!');
         return res.status(201).json({
@@ -45,10 +58,14 @@ export const postTeacher = async (req, res, next) => {
         });
     } catch (error) {
         logger.error(`Error creating teacher: ${error.message}`);
-        return res.status(400).json({
-            success: false,
-            error: error.message,
-        });
+
+        if (error.code === 11000) {
+            return res.status(409).json({
+                success: false,
+                error: "A teacher with that email or employee code already exists",
+            });
+        }
+        next(error)
     }
 };
 
@@ -57,17 +74,15 @@ export const updateTeacherById = async (req, res, next) => {
         logger.info(`Updating teacher by id: ${req.params.id}`);
 
         const idValidation = mongoIdSchema.safeParse(req.params);
-
         if (!idValidation.success) {
             return res.status(400).json({
-                error: 'Update Validation failed',
+                error: 'Id Validation failed',
                 details: formatValidationError(idValidation.error),
             });
         }
 
         // Validate the request body
         const bodyValidation = updateTeacherSchema.safeParse(req.body);
-
         if (!bodyValidation.success) {
             return res.status(400).json({
                 error: 'Update Validation failed',
@@ -75,10 +90,7 @@ export const updateTeacherById = async (req, res, next) => {
             });
         }
 
-        const { id } = idValidation.data;
-        const updates = bodyValidation.data;
-
-        const updatedTeacher = await updateTeacher(id, updates);
+        const updatedTeacher = await updateTeacher(idValidation.data.id, bodyValidation.data);
 
         logger.info(`Teacher ${updatedTeacher?.email} updated successfully!`);
         return res.status(200).json({
@@ -88,12 +100,17 @@ export const updateTeacherById = async (req, res, next) => {
         });
     } catch (error) {
         logger.error(`Error updating Teacher: ${error.message}`);
-        return res.status(
-            error.message === "Teacher not found" ? 404 : 400
-        ).json({
-            success: false,
-            error: error.message,
-        });
+        if (error.message === "Teacher not found") {
+            return res.status(404).json({ success: false, error: error.message });
+        }
+        if (error.code === 11000) {
+            return res.status(409).json({
+                success: false,
+                error: "A teacher with that email or employee code already exists",
+            });
+        }
+
+        next(error);
     }
 };
 
@@ -103,7 +120,7 @@ export const deleteTeacherById = async (req, res) => {
 
         if (!validation.success) {
             return res.status(400).json({
-                error: "Delete Validation failed",
+                error: "Id Validation failed",
                 details: formatValidationError(validation.error),
             });
         }
@@ -118,11 +135,10 @@ export const deleteTeacherById = async (req, res) => {
         });
     } catch (error) {
         logger.error(`Error deleting teacher: ${error.message}`);
-        return res.status(
-            error.message === "Teacher not found" ? 404 : 400
-        ).json({
-            success: false,
-            error: error.message,
-        });
+        if (error.message === "Teacher not found") {
+            return res.status(404).json({ success: false, error: error.message });
+        }
+ 
+        next(error);
     }
 };
