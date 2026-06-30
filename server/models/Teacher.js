@@ -30,9 +30,9 @@ const teacherSchema = new mongoose.Schema(
             trim: true,
         },
         subject: {
-            type: String,
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Subject',
             required: true,
-            trim: true,
         },
         employeeCode: {
             type: String,
@@ -41,7 +41,8 @@ const teacherSchema = new mongoose.Schema(
             trim: true,
         },
         classesAssigned: {
-            type: [String],
+            type: [mongoose.Schema.Types.ObjectId],
+            ref: 'Class',
             default: [],
         },
         joinDate: {
