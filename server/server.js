@@ -7,10 +7,13 @@ import logger from './config/logger.js'
 import helmet from 'helmet'
 import morgan from 'morgan'
 import cookieParser from 'cookie-parser'
+import authRouter from './routes/auth.routes.js'
+import teacherRouter from './routes/teacher.routes.js'
+import profileRouter from './routes/profile.routes.js'
+import subjectRouter from './routes/subject.routes.js'
 
 const app = express()
 const PORT = process.env.PORT || 5000
-
 
 
 //Middleware
@@ -27,6 +30,10 @@ app.get('/', (req, res) => {
     logger.info("Hello from School-Management")
     res.send("Server Running!")
 })
+app.use("/api/auth", authRouter)
+app.use("/api/teachers", teacherRouter)
+app.use("/api/profile", profileRouter)
+app.use('/api/subjects', subjectRouter)
 
 //DB Connection
 await connectDB()
