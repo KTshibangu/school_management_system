@@ -69,7 +69,7 @@ export const updateStudent = async (id, data) => {
         { new: true, runValidators: true }
     );
 
-    logger.info(`Student ${updatedStudent.firstName} ${updatedStudent.lastName} updated successfully`);
+    logger.info(`Student ${updatedStudent?.firstName} ${updatedStudent?.lastName} updated successfully`);
     return updatedStudent;
 };
 
@@ -78,5 +78,5 @@ export const deleteStudent = async (id) => {
     const student = await Student.findByIdAndDelete(id);
     if (!student) throw new Error("Student not found");
 
-    logger.info(`Student ${student.firstName} ${student.lastName} deleted`);
+    logger.info(`Student ${student?.firstName} ${student?.lastName} deleted`);
 };

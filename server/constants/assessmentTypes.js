@@ -1,0 +1,1 @@
+export const ASSESSMENT_TYPES = ["Test", "Exam", "Practical"]

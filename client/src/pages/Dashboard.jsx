@@ -12,7 +12,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setData(dummyAdminDashboardData);
+    setData(dummyTeacherDashboardData);
     setTimeout(() => {
       setLoading(false);
     }, 1000);
@@ -27,7 +27,7 @@ const Dashboard = () => {
       </p>
     );
 
-  if (data.role === 'ADMIN') {
+  if (data.role === '') {
     return <AdminDashboard data={data} />;
   } else {
     return <TeacherDashboard data={data} />;
