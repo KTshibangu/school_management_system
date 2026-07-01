@@ -13,6 +13,8 @@ import profileRouter from './routes/profile.routes.js'
 import subjectRouter from './routes/subject.routes.js'
 import classRouter from './routes/class.routes.js'
 import studentRouter from './routes/student.routes.js'
+import eventRouter from './routes/event.routes.js'
+import assessmentRouter from './routes/assessment.routes.js'
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -38,6 +40,8 @@ app.use("/api/profile", profileRouter)
 app.use('/api/subjects', subjectRouter)
 app.use('/api/classes', classRouter)
 app.use('/api/students', studentRouter)
+app.use('/api/events', eventRouter)
+app.use('/api/assessments', assessmentRouter)
 
 //DB Connection
 await connectDB()

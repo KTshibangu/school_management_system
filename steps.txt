@@ -959,6 +959,10 @@ api.interceptors.request.use((config) => {
  - in the catch block - seterror({type "error", text error.message})
  - finally setloading to false
 
+ ---------------------------------------------------
+
+ the code below is my dashboard controller incomplete, question does this also need a separate service or it's ok just putting the whole code in the controller. also for the teacher dashboard, i want to display the total number of classes, total number of events, 
+
 
 
 
