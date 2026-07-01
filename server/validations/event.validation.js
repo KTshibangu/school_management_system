@@ -15,12 +15,17 @@ const eventBaseSchema = z.object({
 
 // refinement applied after the base — create always has both dates so this is safe
 export const createEventSchema = eventBaseSchema.refine(
-    (data) => data.endDateTime > data.startDateTime,
+    (data) => Object.keys(data).length > 0,
     {
-        message: "End date and time must be after start date and time",
-        path: ["endDateTime"],
-    }
-);
+        message: "Aty least one field must be provided."
+    }).refine(
+        (data) => data.endDateTime > data.startDateTime,
+        {
+            message: "End date and time must be after start date and time",
+            path: ["endDateTime"],
+        }
+    )
+;
 
 // .partial() on the base (no refinement), then refine separately
 export const updateEventSchema = eventBaseSchema.partial().refine(
