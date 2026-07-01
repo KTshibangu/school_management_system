@@ -15,6 +15,8 @@ import classRouter from './routes/class.routes.js'
 import studentRouter from './routes/student.routes.js'
 import eventRouter from './routes/event.routes.js'
 import assessmentRouter from './routes/assessment.routes.js'
+import scoreRouter from './routes/score.routes.js'
+import dashboardRouter from './routes/dashboard.routes.js'
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -42,6 +44,8 @@ app.use('/api/classes', classRouter)
 app.use('/api/students', studentRouter)
 app.use('/api/events', eventRouter)
 app.use('/api/assessments', assessmentRouter)
+app.use("/api/scores", scoreRouter)
+app.use("/api/dashboard", dashboardRouter)
 
 //DB Connection
 await connectDB()

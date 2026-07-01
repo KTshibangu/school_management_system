@@ -1,37 +1,26 @@
-import Teacher from '../models/Teacher.js'
-import Student from '../models/Student.js'
-import Class from '../models/Class.js'
-import Subject from '../models/Subject.js'
+import logger from "../config/logger.js";
+import { getAdminDashboard, getTeacherDashboard } from "../services/dashboard.service.js";
 
-
-//GET dashboard for employee and admin
-//GET /api/dashboard
-
-export const getDashboard = async (req, res) => {
+// GET /api/dashboard
+export const getDashboard = async (req, res, next) => {
     try {
-        const session = req.session
-        const isAdmin = session.role === "ADMIN"
+        const { userId, role } = req.user;
 
-        if (isAdmin) {
-            const [totalTeachers, totalStudents, totalClasses, totalSubjects] = await Promise.all([
-                Teacher.countDocuments({isDeleted: {$ne : true}}),
-                Student.countDocuments(),
-                Class.countDocuments(),
-                Subject.countDocuments()
-            ])
+        const data = role === "ADMIN"
+            ? await getAdminDashboard()
+            : await getTeacherDashboard(userId);
 
-            return res.json({
-                role: "ADMIN",
-                totalTeachers,
-                totalStudents,
-                totalClasses,
-                totalSubjects
-            })
-        } else {
-            const teacher = await Teacher.findOne({userId: session.userId}).lean()
-            if(!teacher) return res.status(404).json({error: "Employee Not Found"})
-        }
+        return res.status(200).json({
+            success: true,
+            data,
+        });
     } catch (error) {
+        logger.error(`Error fetching dashboard: ${error.message}`);
 
+        if (error.message === "Teacher not found") {
+            return res.status(404).json({ success: false, error: error.message });
+        }
+
+        next(error);
     }
-}
+};
