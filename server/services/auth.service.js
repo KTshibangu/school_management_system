@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
 export const loginUser = async ({ email, password, role }) => {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).select("+password");
     if (!user) throw new Error("Invalid credentials");
 
     // Role gate: only check when the caller specifies which portal they're logging into
@@ -30,7 +30,7 @@ export const loginUser = async ({ email, password, role }) => {
 
 
 export const changeUserPassword = async (userId, { currentPassword, newPassword }) => {
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).select("+password");
     if (!user) throw new Error("User not found");
 
     const isValid = await bcrypt.compare(currentPassword, user.password);

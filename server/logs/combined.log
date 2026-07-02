@@ -5,3 +5,115 @@
 {"level":"info","message":"Hello from School-Management","service":"school-management"}
 {"level":"info","message":"::1 - - [22/Jun/2026:16:30:53 +0000] \"GET / HTTP/1.1\" 200 15 \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","service":"school-management"}
 {"level":"info","message":"::1 - - [22/Jun/2026:16:30:53 +0000] \"GET /favicon.ico HTTP/1.1\" 404 150 \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"","service":"school-management"}
+{"level":"info","message":"::1 - - [02/Jul/2026:11:51:25 +0000] \"POST /api/subjects HTTP/1.1\" 401 35 \"-\" \"PostmanRuntime/7.51.1\"","service":"school-management"}
+{"level":"info","message":"::1 - - [02/Jul/2026:11:57:43 +0000] \"POST /api/auth/login HTTP/1.1\" 400 101 \"-\" \"PostmanRuntime/7.51.1\"","service":"school-management"}
+{"level":"error","message":"Login error: data and hash arguments required","service":"school-management"}
+{"level":"info","message":"::1 - - [02/Jul/2026:11:58:06 +0000] \"POST /api/auth/login HTTP/1.1\" 500 1123 \"-\" \"PostmanRuntime/7.51.1\"","service":"school-management"}
+{"level":"error","message":"Login error: data and hash arguments required","service":"school-management"}
+{"level":"info","message":"::1 - - [02/Jul/2026:12:00:02 +0000] \"POST /api/auth/login HTTP/1.1\" 500 1123 \"-\" \"PostmanRuntime/7.51.1\"","service":"school-management"}
+{"level":"info","message":"User admin@schoolted.com logged in","service":"school-management"}
+{"level":"info","message":"::1 - - [02/Jul/2026:12:09:17 +0000] \"POST /api/auth/login HTTP/1.1\" 200 338 \"-\" \"PostmanRuntime/7.51.1\"","service":"school-management"}
+{"level":"info","message":"User authenticated: admin@schoolted.com (ADMIN)","service":"school-management"}
+{"level":"info","message":"Creating subject...","service":"school-management"}
+{"level":"info","message":"Subject MATH-8 created successfully","service":"school-management"}
+{"level":"info","message":"Subject created successfully!","service":"school-management"}
+{"level":"info","message":"::1 - - [02/Jul/2026:12:16:30 +0000] \"POST /api/subjects HTTP/1.1\" 201 335 \"-\" \"PostmanRuntime/7.51.1\"","service":"school-management"}
+{"level":"info","message":"User authenticated: admin@schoolted.com (ADMIN)","service":"school-management"}
+{"level":"info","message":"Creating subject...","service":"school-management"}
+{"level":"info","message":"Subject ENG-8 created successfully","service":"school-management"}
+{"level":"info","message":"Subject created successfully!","service":"school-management"}
+{"level":"info","message":"::1 - - [02/Jul/2026:12:25:24 +0000] \"POST /api/subjects HTTP/1.1\" 201 330 \"-\" \"PostmanRuntime/7.51.1\"","service":"school-management"}
+{"level":"info","message":"User authenticated: admin@schoolted.com (ADMIN)","service":"school-management"}
+{"level":"info","message":"Creating subject...","service":"school-management"}
+{"level":"info","message":"Subject ZUL-8 created successfully","service":"school-management"}
+{"level":"info","message":"Subject created successfully!","service":"school-management"}
+{"level":"info","message":"::1 - - [02/Jul/2026:12:26:53 +0000] \"POST /api/subjects HTTP/1.1\" 201 330 \"-\" \"PostmanRuntime/7.51.1\"","service":"school-management"}
+{"level":"info","message":"User authenticated: admin@schoolted.com (ADMIN)","service":"school-management"}
+{"level":"info","message":"Creating subject...","service":"school-management"}
+{"level":"info","message":"Subject NS-8 created successfully","service":"school-management"}
+{"level":"info","message":"Subject created successfully!","service":"school-management"}
+{"level":"info","message":"::1 - - [02/Jul/2026:12:28:48 +0000] \"POST /api/subjects HTTP/1.1\" 201 337 \"-\" \"PostmanRuntime/7.51.1\"","service":"school-management"}
+{"level":"info","message":"User authenticated: admin@schoolted.com (ADMIN)","service":"school-management"}
+{"level":"info","message":"Creating subject...","service":"school-management"}
+{"level":"info","message":"Subject SS-8 created successfully","service":"school-management"}
+{"level":"info","message":"Subject created successfully!","service":"school-management"}
+{"level":"info","message":"::1 - - [02/Jul/2026:13:39:05 +0000] \"POST /api/subjects HTTP/1.1\" 201 336 \"-\" \"PostmanRuntime/7.51.1\"","service":"school-management"}
+{"level":"info","message":"User authenticated: admin@schoolted.com (ADMIN)","service":"school-management"}
+{"level":"info","message":"Creating subject...","service":"school-management"}
+{"level":"info","message":"Subject LO-8 created successfully","service":"school-management"}
+{"level":"info","message":"Subject created successfully!","service":"school-management"}
+{"level":"info","message":"::1 - - [02/Jul/2026:13:39:35 +0000] \"POST /api/subjects HTTP/1.1\" 201 338 \"-\" \"PostmanRuntime/7.51.1\"","service":"school-management"}
+{"level":"info","message":"User authenticated: admin@schoolted.com (ADMIN)","service":"school-management"}
+{"level":"info","message":"Creating subject...","service":"school-management"}
+{"level":"info","message":"Subject AC-8 created successfully","service":"school-management"}
+{"level":"info","message":"Subject created successfully!","service":"school-management"}
+{"level":"info","message":"::1 - - [02/Jul/2026:13:40:39 +0000] \"POST /api/subjects HTTP/1.1\" 201 336 \"-\" \"PostmanRuntime/7.51.1\"","service":"school-management"}
+{"level":"info","message":"User authenticated: admin@schoolted.com (ADMIN)","service":"school-management"}
+{"level":"info","message":"Creating subject...","service":"school-management"}
+{"level":"info","message":"Subject MATH-9 created successfully","service":"school-management"}
+{"level":"info","message":"Subject created successfully!","service":"school-management"}
+{"level":"info","message":"::1 - - [02/Jul/2026:13:43:01 +0000] \"POST /api/subjects HTTP/1.1\" 201 335 \"-\" \"PostmanRuntime/7.51.1\"","service":"school-management"}
+{"level":"info","message":"User authenticated: admin@schoolted.com (ADMIN)","service":"school-management"}
+{"level":"info","message":"Creating subject...","service":"school-management"}
+{"level":"info","message":"Subject ENG-9 created successfully","service":"school-management"}
+{"level":"info","message":"Subject created successfully!","service":"school-management"}
+{"level":"info","message":"::1 - - [02/Jul/2026:13:43:45 +0000] \"POST /api/subjects HTTP/1.1\" 201 330 \"-\" \"PostmanRuntime/7.51.1\"","service":"school-management"}
+{"level":"info","message":"User authenticated: admin@schoolted.com (ADMIN)","service":"school-management"}
+{"level":"info","message":"Creating subject...","service":"school-management"}
+{"level":"info","message":"Subject ZUL-9 created successfully","service":"school-management"}
+{"level":"info","message":"Subject created successfully!","service":"school-management"}
+{"level":"info","message":"::1 - - [02/Jul/2026:13:44:14 +0000] \"POST /api/subjects HTTP/1.1\" 201 330 \"-\" \"PostmanRuntime/7.51.1\"","service":"school-management"}
+{"level":"info","message":"User authenticated: admin@schoolted.com (ADMIN)","service":"school-management"}
+{"level":"info","message":"Creating subject...","service":"school-management"}
+{"level":"info","message":"Subject NS-9 created successfully","service":"school-management"}
+{"level":"info","message":"Subject created successfully!","service":"school-management"}
+{"level":"info","message":"::1 - - [02/Jul/2026:13:44:37 +0000] \"POST /api/subjects HTTP/1.1\" 201 337 \"-\" \"PostmanRuntime/7.51.1\"","service":"school-management"}
+{"level":"info","message":"User authenticated: admin@schoolted.com (ADMIN)","service":"school-management"}
+{"level":"info","message":"Creating subject...","service":"school-management"}
+{"level":"info","message":"Subject SS-9 created successfully","service":"school-management"}
+{"level":"info","message":"Subject created successfully!","service":"school-management"}
+{"level":"info","message":"::1 - - [02/Jul/2026:13:44:59 +0000] \"POST /api/subjects HTTP/1.1\" 201 336 \"-\" \"PostmanRuntime/7.51.1\"","service":"school-management"}
+{"level":"info","message":"User authenticated: admin@schoolted.com (ADMIN)","service":"school-management"}
+{"level":"info","message":"Creating subject...","service":"school-management"}
+{"level":"info","message":"Subject LO-9 created successfully","service":"school-management"}
+{"level":"info","message":"Subject created successfully!","service":"school-management"}
+{"level":"info","message":"::1 - - [02/Jul/2026:13:46:23 +0000] \"POST /api/subjects HTTP/1.1\" 201 338 \"-\" \"PostmanRuntime/7.51.1\"","service":"school-management"}
+{"level":"info","message":"User authenticated: admin@schoolted.com (ADMIN)","service":"school-management"}
+{"level":"info","message":"Creating subject...","service":"school-management"}
+{"level":"info","message":"Subject AC-9 created successfully","service":"school-management"}
+{"level":"info","message":"Subject created successfully!","service":"school-management"}
+{"level":"info","message":"::1 - - [02/Jul/2026:13:47:24 +0000] \"POST /api/subjects HTTP/1.1\" 201 336 \"-\" \"PostmanRuntime/7.51.1\"","service":"school-management"}
+{"level":"info","message":"User authenticated: admin@schoolted.com (ADMIN)","service":"school-management"}
+{"level":"info","message":"Creating class...","service":"school-management"}
+{"level":"info","message":"Class 8A (grade 8) created successfully","service":"school-management"}
+{"level":"info","message":"Class created successfully!","service":"school-management"}
+{"level":"info","message":"::1 - - [02/Jul/2026:13:59:43 +0000] \"POST /api/classes HTTP/1.1\" 201 361 \"-\" \"PostmanRuntime/7.51.1\"","service":"school-management"}
+{"level":"info","message":"User authenticated: admin@schoolted.com (ADMIN)","service":"school-management"}
+{"level":"info","message":"Creating class...","service":"school-management"}
+{"level":"info","message":"Class 8B (grade 8) created successfully","service":"school-management"}
+{"level":"info","message":"Class created successfully!","service":"school-management"}
+{"level":"info","message":"::1 - - [02/Jul/2026:14:03:49 +0000] \"POST /api/classes HTTP/1.1\" 201 361 \"-\" \"PostmanRuntime/7.51.1\"","service":"school-management"}
+{"level":"info","message":"User authenticated: admin@schoolted.com (ADMIN)","service":"school-management"}
+{"level":"info","message":"Creating class...","service":"school-management"}
+{"level":"info","message":"Class 8C (grade 8) created successfully","service":"school-management"}
+{"level":"info","message":"Class created successfully!","service":"school-management"}
+{"level":"info","message":"::1 - - [02/Jul/2026:14:04:15 +0000] \"POST /api/classes HTTP/1.1\" 201 361 \"-\" \"PostmanRuntime/7.51.1\"","service":"school-management"}
+{"level":"info","message":"User authenticated: admin@schoolted.com (ADMIN)","service":"school-management"}
+{"level":"info","message":"Creating class...","service":"school-management"}
+{"level":"info","message":"Class 9A (grade 9) created successfully","service":"school-management"}
+{"level":"info","message":"Class created successfully!","service":"school-management"}
+{"level":"info","message":"::1 - - [02/Jul/2026:14:05:33 +0000] \"POST /api/classes HTTP/1.1\" 201 361 \"-\" \"PostmanRuntime/7.51.1\"","service":"school-management"}
+{"level":"info","message":"User authenticated: admin@schoolted.com (ADMIN)","service":"school-management"}
+{"level":"info","message":"Creating class...","service":"school-management"}
+{"level":"error","message":"Error creating class: E11000 duplicate key error collection: school_management.classes index: name_1_grade_1 dup key: { name: \"9A\", grade: \"9\" }","service":"school-management"}
+{"level":"info","message":"::1 - - [02/Jul/2026:14:05:48 +0000] \"POST /api/classes HTTP/1.1\" 409 80 \"-\" \"PostmanRuntime/7.51.1\"","service":"school-management"}
+{"level":"info","message":"User authenticated: admin@schoolted.com (ADMIN)","service":"school-management"}
+{"level":"info","message":"Creating class...","service":"school-management"}
+{"level":"info","message":"Class 9B (grade 9) created successfully","service":"school-management"}
+{"level":"info","message":"Class created successfully!","service":"school-management"}
+{"level":"info","message":"::1 - - [02/Jul/2026:14:06:04 +0000] \"POST /api/classes HTTP/1.1\" 201 361 \"-\" \"PostmanRuntime/7.51.1\"","service":"school-management"}
+{"level":"info","message":"User authenticated: admin@schoolted.com (ADMIN)","service":"school-management"}
+{"level":"info","message":"Creating class...","service":"school-management"}
+{"level":"info","message":"Class 9C (grade 9) created successfully","service":"school-management"}
+{"level":"info","message":"Class created successfully!","service":"school-management"}
+{"level":"info","message":"::1 - - [02/Jul/2026:14:06:27 +0000] \"POST /api/classes HTTP/1.1\" 201 361 \"-\" \"PostmanRuntime/7.51.1\"","service":"school-management"}
