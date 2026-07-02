@@ -32,7 +32,7 @@ const Sidebar = () => {
     setMobileOpen(false);
   }, [pathname]);
 
-  const role = 'ADMIN' || 'EMPLOYEE';
+  const role = 'ADMIN' || 'TEACHER';
 
   const navItems = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutGridIcon },
