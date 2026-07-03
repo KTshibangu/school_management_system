@@ -36,7 +36,7 @@ export const login = async (req, res, next) => {
 
 // GET /api/auth/session
 export const session = (req, res) => {
-    return res.status(200).json({ user: req.session });
+    return res.status(200).json({ user: req.user });
 };
 
 // POST /api/auth/change-password
