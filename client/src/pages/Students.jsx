@@ -3,6 +3,7 @@ import { Plus, X } from 'lucide-react';
 import StudentCard from '../components/StudentCard';
 import StudentForm from '../components/StudentForm';
 import api from '../api/axios';
+import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext'
 
 
@@ -22,6 +23,7 @@ const Students = () => {
       setStudents(res.data.data);
     } catch (error) {
       console.error("Failed to fetch Students");
+      toast.error(error.response?.data?.error || error.message);
     } finally {
       setLoading(false);
     }

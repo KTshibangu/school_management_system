@@ -18,6 +18,7 @@ const Teachers = () => {
       setTeachers(res.data.data)
     } catch (error) {
       console.error("Failed to fetch Teachers")
+      toast.error(error.response?.data?.error || error?.message)
     } finally {
       setLoading(false)
     }

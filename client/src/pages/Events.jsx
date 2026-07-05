@@ -18,6 +18,9 @@ import {
 } from '../assets/myassets';
 import EventForm from '../components/EventForm';
 import EventSelect from '../components/EventSelect';
+import { useAuth } from '../context/AuthContext'
+import api from '../api/axios';
+import toast from 'react-hot-toast';
 
 const Events = () => {
   const [events, setEvents] = useState([]);
@@ -25,18 +28,24 @@ const Events = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editEvent, setEditEvent] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
-  const isAdmin = false;
+
+  const { user } = useAuth()
+  const isAdmin = user?.role === 'ADMIN';
 
   const [filterType, setFilterType] = useState('');
   const [filterAudience, setFilterAudience] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
 
   const fetchEvents = useCallback(async () => {
-    setLoading(true);
-    setTimeout(() => {
-      setEvents(dummyEventData);
-      setLoading(false);
-    }, 1000);
+    try {
+      const res = await api.get('/events')
+      setEvents(res.data.data)
+    } catch (error) {
+      console.error("Failed to fetch Events")
+      toast.error(error.response?.data?.error || error?.message)
+    } finally {
+      setLoading(false)
+    }
   }, []);
 
   useEffect(() => {

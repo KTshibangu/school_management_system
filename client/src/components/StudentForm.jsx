@@ -11,11 +11,11 @@ const StudentForm = ({ initialData, isAdmin, onSuccess, onCancel }) => {
   const [loading, setLoading] = useState(false);
   const isEditMode = !!initialData;
 
-  const [classroom, setClassroom] = useState(initialData?.className || '');
+  const [classroom, setClassroom] = useState(initialData?.class?._id || initialData?.class || '');
 
   useEffect(() => {
     if (initialData) {
-      setClassroom(initialData.className || '');
+      setClassroom(initialData.class?._id || initialData.class || '');
     }
   }, [initialData]);
 
@@ -26,7 +26,7 @@ const StudentForm = ({ initialData, isAdmin, onSuccess, onCancel }) => {
     const formData = new FormData(e.currentTarget);
 
     try {
-      const url = isEditMode ? `/students/${initialData.id}` : '/students';
+      const url = isEditMode ? `/students/${initialData._id}` : '/students';
       const method = isEditMode ? 'put' : 'post';
       await api[method](url, formData);
       onSuccess ? onSuccess() : navigate('/students');

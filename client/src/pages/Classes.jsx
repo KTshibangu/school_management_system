@@ -19,6 +19,7 @@ const Classes = () => {
       setClasses(res.data.data)
     } catch (error) {
       console.error("Failed to fetch Classes")
+      toast.error(error.response?.data?.error || error?.message)
     } finally {
       setLoading(false)
     }

@@ -4,7 +4,7 @@ const objectIdSchema = z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid ID");
 
 const classesSubjectsSchema = z.preprocess((val) => {
     if (typeof val === "string") {
-        return val === "" ? [] : val.split(",");
+        return val === "" ? [] : val.split(",").map((s) => s.trim()).filter(Boolean);
     }
     return val;
 }, z.array(objectIdSchema).optional());
