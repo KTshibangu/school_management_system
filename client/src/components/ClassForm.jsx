@@ -1,37 +1,66 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { SUBJECTS } from '../assets/myassets';
 import { Loader2Icon } from 'lucide-react';
+import api from '../api/axios';
+import toast from 'react-hot-toast';
 
 const ClassForm = ({ initialData, onSuccess, onCancel }) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [subjects, setSubjects] = useState([]);
   const isEditMode = !!initialData;
 
-  const [gradeLevel, setGradeLevel] = useState(initialData?.gradeLevels || '');
+  const [gradeLevel, setGradeLevel] = useState(initialData?.grade || '');
   const [selectedSubjects, setSelectedSubjects] = useState(
-    initialData?.subjectsAllocated || []
+    normaliseSubjectIds(initialData?.classSubjects)
   );
+
+  function normaliseSubjectIds(classSubjects) {
+    if (!classSubjects) return [];
+    return classSubjects.map(s => (typeof s === 'string' ? s : s._id));
+  }
+
+  useEffect(() => {
+    api.get('/subjects')
+      .then(({ data }) => setSubjects(data.data || []))
+      .catch((err) => {
+        console.error('Failed to load subjects:', err);
+        toast.error('Could not load subjects');
+      })
+  }, [])
 
   useEffect(() => {
     if (initialData) {
-      setGradeLevel(initialData.gradeLevels || '');
-      setSelectedSubjects(initialData.subjectsAllocated || []);
+      setGradeLevel(initialData.grade || '');
+      setSelectedSubjects(normaliseSubjectIds(initialData.classSubjects));
     }
   }, [initialData]);
 
-  const availableSubjects = SUBJECTS.filter(
-    s => String(s.gradeLevels) === String(gradeLevel)
+  const availableSubjects = subjects.filter(
+    s => String(s.grade) === String(gradeLevel)
   );
 
-  const toggleSubject = code => {
+  const toggleSubject = subjectId => {
     setSelectedSubjects(prev =>
-      prev.includes(code) ? prev.filter(c => c !== code) : [...prev, code]
+      prev.includes(subjectId) ? prev.filter(c => c !== subjectId) : [...prev, subjectId]
     );
   };
 
   const handleSubmit = async e => {
     e.preventDefault();
+    setLoading(true)
+    const formData = new FormData(e.currentTarget)
+
+    try {
+      const url = isEditMode ? `/classes/${initialData.id}` : '/classes';
+      const method = isEditMode ? "put" : "post";
+      await api[method](url, formData)
+      onSuccess ? onSuccess() : navigate("/classes")
+    } catch (error) {
+      toast.error(error.response?.data?.error || error.message)
+    } finally {
+      setLoading(false)
+    }
   };
 
   return (
@@ -51,7 +80,7 @@ const ClassForm = ({ initialData, onSuccess, onCancel }) => {
           <div>
             <label className="block mb-2">Grade Level</label>
             <input
-              name="gradeLevels"
+              name="grade"
               required
               value={gradeLevel}
               onChange={e => setGradeLevel(e.target.value)}
@@ -61,23 +90,21 @@ const ClassForm = ({ initialData, onSuccess, onCancel }) => {
             <label className="block mb-2">Subjects Allocated</label>
             <div className="flex flex-wrap gap-2">
               {availableSubjects.map(subject => {
-                const isSelected = selectedSubjects.includes(subject.code);
+                const isSelected = selectedSubjects.includes(subject._id);
                 return (
                   <label
-                    key={subject.code}
+                    key={subject._id}
                     className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm border 
-                                        cursor-pointer transition-colors select-none ${
-                                          isSelected
-                                            ? 'bg-indigo-50 border-indigo-300 text-indigo-700'
-                                            : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
-                                        }`}
+                                        cursor-pointer transition-colors select-none ${isSelected
+                        ? 'bg-indigo-50 border-indigo-300 text-indigo-700'
+                        : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
+                      }`}
                   >
                     <input
                       type="checkbox"
-                      name="subjectsAllocated"
-                      value={subject.code}
+                      value={subject._id}
                       checked={isSelected}
-                      onChange={() => toggleSubject(subject.code)}
+                      onChange={() => toggleSubject(subject._id)}
                       className="sr-only"
                     />
                     {subject.name}
@@ -92,7 +119,7 @@ const ClassForm = ({ initialData, onSuccess, onCancel }) => {
             )}
             <input
               type="hidden"
-              name="subjectsAllocated"
+              name="classSubjects"
               value={selectedSubjects.join(',')}
             />
           </div>

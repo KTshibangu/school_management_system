@@ -1,9 +1,17 @@
 import React from 'react';
 import { PencilIcon, Trash2Icon } from 'lucide-react';
+import toast from 'react-hot-toast';
+import api from '../api/axios';
 
 const ClassCard = ({ classes, onDelete, onEdit }) => {
   const handleDelete = async () => {
     if (!confirm('Are you want to delete this class')) return;
+    try {
+      await api.delete(`/classes/${classes.id}`)
+      onDelete()
+    } catch (error) {
+      toast.error(error.response?.data?.error || error.message)
+    }
   };
   return (
     <div className="card p-4 flex items-center justify-between">

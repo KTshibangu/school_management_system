@@ -6,7 +6,7 @@ export const getProfile = async (user) => {
     // Authenticated user is an ADMIN with no Teacher record — return a minimal admin profile
     if (!teacher) {
         return {
-            firstName: "Admin",
+            firstName: "Administrator",
             lastName: "",
             email: user.email,
         };

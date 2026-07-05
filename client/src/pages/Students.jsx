@@ -1,8 +1,10 @@
 import React, { useCallback, useState, useMemo, useEffect } from 'react';
-import { dummyStudentData } from '../assets/myassets';
 import { Plus, X } from 'lucide-react';
 import StudentCard from '../components/StudentCard';
 import StudentForm from '../components/StudentForm';
+import api from '../api/axios';
+import { useAuth } from '../context/AuthContext'
+
 
 const Students = () => {
   const [students, setStudents] = useState([]);
@@ -10,25 +12,32 @@ const Students = () => {
   const [editStudents, setEditStudents] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedGrade, setSelectedGrade] = useState('ALL');
-  const isAdmin = false;
+
+  const { user } = useAuth()
+  const isAdmin = user?.role === 'ADMIN';
 
   const fetchStudents = useCallback(async () => {
-    setLoading(true);
-    setStudents(dummyStudentData);
-    setTimeout(() => {
+    try {
+      const res = await api.get('/students');
+      setStudents(res.data.data);
+    } catch (error) {
+      console.error("Failed to fetch Students");
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   }, []);
 
   const gradeLevels = useMemo(() => {
-    const unique = [...new Set(students.map(s => s.gradeLevels))];
+    const unique = [...new Set(students.map(s => s.class?.grade))].filter(Boolean);
     return unique.sort((a, b) => a - b);
   }, [students]);
 
   const filteredStudents = useMemo(() => {
     if (selectedGrade === 'ALL') return students;
-    return students.filter(s => s.gradeLevels === selectedGrade);
+    return students.filter(s => s.class?.grade === selectedGrade);
   }, [selectedGrade, students]);
+
+
 
   useEffect(() => {
     fetchStudents();
@@ -62,11 +71,10 @@ const Students = () => {
           <button
             onClick={() => setSelectedGrade('ALL')}
             className={`px-3 py-1.5 rounded-full text-sm border transition-colors
-                        ${
-                          selectedGrade === 'ALL'
-                            ? 'bg-indigo-50 border-indigo-300 text-indigo-700'
-                            : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
-                        }`}
+                        ${selectedGrade === 'ALL'
+                ? 'bg-indigo-50 border-indigo-300 text-indigo-700'
+                : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
+              }`}
           >
             All Grades
           </button>
@@ -75,11 +83,10 @@ const Students = () => {
               key={grade}
               onClick={() => setSelectedGrade(grade)}
               className={`px-3 py-1.5 rounded-full text-sm border transition-colors
-                            ${
-                              selectedGrade === grade
-                                ? 'bg-indigo-50 border-indigo-300 text-indigo-700'
-                                : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
-                            }`}
+                            ${selectedGrade === grade
+                  ? 'bg-indigo-50 border-indigo-300 text-indigo-700'
+                  : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
+                }`}
             >
               Grade {grade}
             </button>

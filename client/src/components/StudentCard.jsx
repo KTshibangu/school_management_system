@@ -12,8 +12,8 @@ const StudentCard = ({ students, isAdmin, onDelete, onEdit }) => {
         <td>{students.firstName}</td>
         <td>{students.lastName}</td>
         <td>{students.parentName || '—'}</td>
-        <td>{students.parentPhone}</td>
-        <td>{students.className}</td>
+        <td>{students.parentCell}</td>
+        <td>{students.class?.name}</td>
         <td>
           <div className="flex items-center gap-2">
             <button

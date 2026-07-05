@@ -7,6 +7,7 @@ import { formatValidationError } from "../utils/format.js";
 export const fetchProfile = async (req, res, next) => {
     try {
         const profile = await getProfile(req.user);
+        console.log("Profile data:", JSON.stringify(profile, null, 2));
 
         return res.status(200).json({
             success: true,

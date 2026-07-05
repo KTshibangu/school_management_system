@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Loader2Icon } from 'lucide-react';
 import ClassroomSelect from './ClassroomSelect';
+import api from '../api/axios';
+import toast from 'react-hot-toast';
 
 const StudentForm = ({ initialData, isAdmin, onSuccess, onCancel }) => {
   const navigate = useNavigate();
@@ -19,14 +21,21 @@ const StudentForm = ({ initialData, isAdmin, onSuccess, onCancel }) => {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    // const formData = new FormData(e.target)
-    // const data = {
-    //     firstName: formData.get('firstName'),
-    //     lastName: formData.get('lastName'),
-    //     parentName: formData.get('parentName'),
-    //     parentPhone: formData.get('parentPhone'),
-    //     className: classroom,
-    // }
+
+    setLoading(true);
+    const formData = new FormData(e.currentTarget);
+
+    try {
+      const url = isEditMode ? `/students/${initialData.id}` : '/students';
+      const method = isEditMode ? 'put' : 'post';
+      await api[method](url, formData);
+      onSuccess ? onSuccess() : navigate('/students');
+    } catch (error) {
+      toast.error(error.response?.data?.error || error.message);
+    } finally {
+      setLoading(false);
+    }
+
   };
 
   return (
@@ -69,9 +78,9 @@ const StudentForm = ({ initialData, isAdmin, onSuccess, onCancel }) => {
           <div>
             <label className="block mb-2">Parent Phone No.</label>
             <input
-              name="parentPhone"
+              name="parentCell"
               required
-              defaultValue={initialData?.parentPhone}
+              defaultValue={initialData?.parentCell}
               disabled={!isAdmin}
             />
           </div>

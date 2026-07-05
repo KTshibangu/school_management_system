@@ -65,9 +65,8 @@ const teacherSchema = new mongoose.Schema(
 )
 
 // soft delete helper — filters out deleted teachers from any query
-teacherSchema.pre(/^find/, function (next) {
+teacherSchema.pre(/^find/, function () {
     this.where({ isDeleted: false })
-    next()
 })
 
 const Teacher = mongoose.models.Teacher || mongoose.model('Teacher', teacherSchema)

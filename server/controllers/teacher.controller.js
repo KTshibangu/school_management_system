@@ -9,6 +9,7 @@ export const fetchAllTeachers = async (req, res, next) => {
     try {
         logger.info("Getting teachers...");
         const teachers = await getTeachers();
+        
 
         return res.status(200).json({
             message: "Successfully retrieved teachers",
