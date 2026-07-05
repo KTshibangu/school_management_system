@@ -4,6 +4,8 @@ import { SUBJECTS } from '../assets/myassets';
 import { Plus, X } from 'lucide-react';
 import SubjectCard from '../components/SubjectCard';
 import SubjectForm from '../components/SubjectForm';
+import toast from 'react-hot-toast';
+import api from '../api/axios';
 
 const Subjects = () => {
   const [subjects, setSubjects] = useState([]);
@@ -13,21 +15,25 @@ const Subjects = () => {
   const [selectedGrade, setSelectedGrade] = useState('ALL');
 
   const fetchSubjects = useCallback(async () => {
-    setLoading(true);
-    setSubjects(SUBJECTS);
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
+    try {
+      const res = await api.get('/subjects')
+      setSubjects(res.data.data)
+    } catch (error) {
+      console.error("Failed to fetch Subjects")
+      toast.error(error.response?.data?.error || error?.message)
+    } finally {
+      setLoading(false)
+    }
   }, []);
 
   const gradeLevels = useMemo(() => {
-    const unique = [...new Set(subjects.map(s => s.gradeLevels))];
+    const unique = [...new Set(subjects.map(s => s.grade))];
     return unique.sort((a, b) => a - b);
   }, [subjects]);
 
   const filteredSubjects = useMemo(() => {
     if (selectedGrade === 'ALL') return subjects;
-    return subjects.filter(s => s.gradeLevels === selectedGrade);
+    return subjects.filter(s => s.grade === selectedGrade);
   }, [selectedGrade, subjects]);
 
   useEffect(() => {
@@ -59,11 +65,10 @@ const Subjects = () => {
           <button
             onClick={() => setSelectedGrade('ALL')}
             className={`px-3 py-1.5 rounded-full text-sm border transition-colors
-                        ${
-                          selectedGrade === 'ALL'
-                            ? 'bg-indigo-50 border-indigo-300 text-indigo-700'
-                            : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
-                        }`}
+                        ${selectedGrade === 'ALL'
+                ? 'bg-indigo-50 border-indigo-300 text-indigo-700'
+                : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
+              }`}
           >
             All Grades
           </button>
@@ -72,11 +77,10 @@ const Subjects = () => {
               key={grade}
               onClick={() => setSelectedGrade(grade)}
               className={`px-3 py-1.5 rounded-full text-sm border transition-colors
-                            ${
-                              selectedGrade === grade
-                                ? 'bg-indigo-50 border-indigo-300 text-indigo-700'
-                                : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
-                            }`}
+                            ${selectedGrade === grade
+                  ? 'bg-indigo-50 border-indigo-300 text-indigo-700'
+                  : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
+                }`}
             >
               Grade {grade}
             </button>
@@ -97,7 +101,7 @@ const Subjects = () => {
             ) : (
               filteredSubjects.map(subject => (
                 <SubjectCard
-                  key={subject.code}
+                  key={subject._id}
                   subject={subject}
                   onDelete={fetchSubjects}
                   onEdit={setEditSubject}

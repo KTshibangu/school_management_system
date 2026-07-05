@@ -1,9 +1,17 @@
 import React from 'react';
 import { PencilIcon, Trash2Icon } from 'lucide-react';
+import toast from 'react-hot-toast';
+import api from '../api/axios';
 
 const SubjectCard = ({ subject, onDelete, onEdit }) => {
   const handleDelete = async () => {
     if (!confirm('Are you want to delete this subject')) return;
+    try {
+      await api.delete(`/subjects/${subject._id}`)
+      onDelete()
+    } catch (error) {
+      toast.error(error.response?.data?.error || error.message)
+    }
   };
 
   return (
@@ -11,7 +19,7 @@ const SubjectCard = ({ subject, onDelete, onEdit }) => {
       <div className="flex flex-col">
         <h4 className="font-medium text-slate-900">{subject.name}</h4>
         <p className="text-xs text-slate-500 mt-1">
-          {subject.code} · Grade {subject.gradeLevels}
+          {subject.code} · Grade {subject.grade}
         </p>
       </div>
       <div className="flex items-center gap-2">

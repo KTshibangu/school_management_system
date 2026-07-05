@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
+import toast from 'react-hot-toast';
 
 const Sidebar = () => {
   const { pathname } = useLocation();
@@ -36,6 +37,8 @@ const Sidebar = () => {
       if (profile?.firstName) {
         setUserName(`${profile?.firstName} ${profile?.lastName || ""}`.trim())
       }
+    }).catch((error) => {
+      toast.error(error.response?.data?.error || error.message)
     })
   }, []);
 

@@ -52,7 +52,7 @@ const ClassForm = ({ initialData, onSuccess, onCancel }) => {
     const formData = new FormData(e.currentTarget)
 
     try {
-      const url = isEditMode ? `/classes/${initialData.id}` : '/classes';
+      const url = isEditMode ? `/classes/${initialData._id}` : '/classes';
       const method = isEditMode ? "put" : "post";
       await api[method](url, formData)
       onSuccess ? onSuccess() : navigate("/classes")

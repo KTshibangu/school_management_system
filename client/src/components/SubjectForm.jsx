@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Loader2Icon } from 'lucide-react';
+import api from '../api/axios';
+import toast from 'react-hot-toast';
 
 const SubjectForm = ({ initialData, onSuccess, onCancel }) => {
   const navigate = useNavigate();
@@ -9,6 +11,19 @@ const SubjectForm = ({ initialData, onSuccess, onCancel }) => {
 
   const handleSubmit = async e => {
     e.preventDefault();
+    setLoading(true)
+    const formData = new FormData(e.currentTarget)
+
+    try {
+      const url = isEditMode ? `/subjects/${initialData._id}` : '/subjects';
+      const method = isEditMode ? "put" : "post";
+      await api[method](url, formData)
+      onSuccess ? onSuccess() : navigate("/subjects")
+    } catch (error) {
+      toast.error(error.response?.data?.error || error.message)
+    } finally {
+      setLoading(false)
+    }
   };
 
   return (
@@ -32,17 +47,17 @@ const SubjectForm = ({ initialData, onSuccess, onCancel }) => {
           <div>
             <label className="block mb-2">Grade Level</label>
             <input
-              name="gradeLevels"
+              name="grade"
               required
-              defaultValue={initialData?.gradeLevels}
+              defaultValue={initialData?.grade}
             />
           </div>
           <div className="sm:col-span-2">
             <label className="block mb-2">Term 1 Chapters</label>
             <textarea
-              name="term1Chapters"
+              name="term1"
               rows={3}
-              defaultValue={initialData?.term1Chapters}
+              defaultValue={initialData?.term1}
               className="resize-none"
               placeholder="List Chapters (comma separated)"
             />
@@ -50,9 +65,9 @@ const SubjectForm = ({ initialData, onSuccess, onCancel }) => {
           <div className="sm:col-span-2">
             <label className="block mb-2">Term 2 Chapters</label>
             <textarea
-              name="term2Chapters"
+              name="term2"
               rows={3}
-              defaultValue={initialData?.term2Chapters}
+              defaultValue={initialData?.term2}
               className="resize-none"
               placeholder="List Chapters (comma separated)"
             />
@@ -60,9 +75,9 @@ const SubjectForm = ({ initialData, onSuccess, onCancel }) => {
           <div className="sm:col-span-2">
             <label className="block mb-2">Term 3 Chapters</label>
             <textarea
-              name="term3Chapters"
+              name="term3"
               rows={3}
-              defaultValue={initialData?.term3Chapters}
+              defaultValue={initialData?.term3}
               className="resize-none"
               placeholder="List Chapters (comma separated)"
             />
@@ -70,9 +85,9 @@ const SubjectForm = ({ initialData, onSuccess, onCancel }) => {
           <div className="sm:col-span-2">
             <label className="block mb-2">Term 4 Chapters</label>
             <textarea
-              name="term4Chapters"
+              name="term4"
               rows={3}
-              defaultValue={initialData?.term4Chapters}
+              defaultValue={initialData?.term4}
               className="resize-none"
               placeholder="List Chapters (comma separated)"
             />

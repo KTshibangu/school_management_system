@@ -1,9 +1,17 @@
 import React from 'react';
 import { EyeIcon, PencilIcon, Trash2Icon } from 'lucide-react';
+import toast from 'react-hot-toast';
+import api from '../api/axios';
 
 const StudentCard = ({ students, isAdmin, onDelete, onEdit }) => {
   const handleDelete = async () => {
     if (!confirm('Are you want to delete this class')) return;
+    try {
+      await api.delete(`/students/${students._id}`)
+      onDelete()
+    } catch (error) {
+      toast.error(error.response?.data?.error || error.message)
+    }
   };
 
   return (
