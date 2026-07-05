@@ -4,6 +4,7 @@ import { Plus, X } from 'lucide-react';
 import { CLASSES } from '../assets/myassets';
 import ClassCard from '../components/ClassCard';
 import ClassForm from '../components/ClassForm';
+import api from '../api/axios';
 
 const Classes = () => {
   const [classes, setClasses] = useState([]);
@@ -13,21 +14,24 @@ const Classes = () => {
   const [selectedGrade, setSelectedGrade] = useState('ALL');
 
   const fetchClasses = useCallback(async () => {
-    setLoading(true);
-    setClasses(CLASSES);
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
+    try {
+      const res = await api.get('/classes')
+      setClasses(res.data.data)
+    } catch (error) {
+      console.error("Failed to fetch Classes")
+    } finally {
+      setLoading(false)
+    }
   }, []);
 
   const gradeLevels = useMemo(() => {
-    const unique = [...new Set(classes.map(s => s.gradeLevels))];
+    const unique = [...new Set(classes.map(s => s.grade))];
     return unique.sort((a, b) => a - b);
   }, [classes]);
 
   const filteredClasses = useMemo(() => {
     if (selectedGrade === 'ALL') return classes;
-    return classes.filter(s => s.gradeLevels === selectedGrade);
+    return classes.filter(s => s.grade === selectedGrade);
   }, [selectedGrade, classes]);
 
   useEffect(() => {
@@ -58,11 +62,10 @@ const Classes = () => {
           <button
             onClick={() => setSelectedGrade('ALL')}
             className={`px-3 py-1.5 rounded-full text-sm border transition-colors
-                        ${
-                          selectedGrade === 'ALL'
-                            ? 'bg-indigo-50 border-indigo-300 text-indigo-700'
-                            : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
-                        }`}
+                        ${selectedGrade === 'ALL'
+                ? 'bg-indigo-50 border-indigo-300 text-indigo-700'
+                : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
+              }`}
           >
             All Grades
           </button>
@@ -71,11 +74,10 @@ const Classes = () => {
               key={grade}
               onClick={() => setSelectedGrade(grade)}
               className={`px-3 py-1.5 rounded-full text-sm border transition-colors
-                            ${
-                              selectedGrade === grade
-                                ? 'bg-indigo-50 border-indigo-300 text-indigo-700'
-                                : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
-                            }`}
+                            ${selectedGrade === grade
+                  ? 'bg-indigo-50 border-indigo-300 text-indigo-700'
+                  : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
+                }`}
             >
               Grade {grade}
             </button>
@@ -96,7 +98,7 @@ const Classes = () => {
             ) : (
               filteredClasses.map(classItem => (
                 <ClassCard
-                  key={classItem.name}
+                  key={classItem._id}
                   classes={classItem}
                   onDelete={fetchClasses}
                   onEdit={setEditClasses}

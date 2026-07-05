@@ -3,6 +3,7 @@ import { dummyTeacherData } from '../assets/myassets';
 import { Plus, Search, ShowerHead, X } from 'lucide-react';
 import TeacherCard from '../components/TeacherCard';
 import TeacherForm from '../components/TeacherForm';
+import api from '../api/axios';
 
 const Teachers = () => {
   const [teachers, setTeachers] = useState([]);
@@ -12,11 +13,14 @@ const Teachers = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
 
   const fetchTeachers = useCallback(async () => {
-    setLoading(true);
-    setTeachers(dummyTeacherData);
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
+    try {
+      const res = await api.get('/teachers')
+      setTeachers(res.data.data)
+    } catch (error) {
+      console.error("Failed to fetch Teachers")
+    } finally {
+      setLoading(false)
+    }
   }, []);
 
   useEffect(() => {

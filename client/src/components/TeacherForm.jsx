@@ -1,32 +1,80 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { SUBJECTS, CLASSES } from '../assets/myassets';
+import { data, useNavigate } from 'react-router-dom';
 import { Loader2Icon } from 'lucide-react';
+import api from '../api/axios';
+import toast from 'react-hot-toast'
 
 const TeacherForm = ({ initialData, onSuccess, onCancel }) => {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
   const isEditMode = !!initialData;
-  const [selectedClasses, setSelectedClasses] = useState(
-    initialData?.classesAssigned || []
+  const [selectedClasses, setSelectedClasses] = useState(() =>
+    normaliseClassIds(initialData?.classesAssigned)
   );
 
-  const toggleClass = className => {
+  function normaliseClassIds(classesAssigned) {
+    if (!classesAssigned) return [];
+    return classesAssigned.map(c => (typeof c === 'string' ? c : c._id));
+  }
+
+  const [classes, setClasses] = useState([]);
+  const [subjects, setSubjects] = useState([]);
+  const [classesLoading, setClassesLoading] = useState(true)
+  const [subjectsLoading, setSubjectsLoading] = useState(true);
+
+  useEffect(() => {
+    api.get('/classes')
+      .then(({ data }) => {
+        setClasses(data.data || [])
+      })
+      .catch((err) => {
+        console.error('Failed to load classes:', err);
+        toast.error('Could not load classes');
+      })
+      .finally(() => setClassesLoading(false));
+
+    api.get('/subjects')
+      .then(({ data }) => setSubjects(data.data || []))
+      .catch((err) => {
+        console.error('Failed to load subjects:', err);
+        toast.error('Could not load subjects');
+      })
+      .finally(() => setSubjectsLoading(false));
+  }, [])
+
+  const toggleClass = classId => {
     setSelectedClasses(prev =>
-      prev.includes(className)
-        ? prev.filter(c => c !== className)
-        : [...prev, className]
+      prev.includes(classId)
+        ? prev.filter(c => c !== classId)
+        : [...prev, classId]
     );
   };
 
   const handleSubmit = async e => {
     e.preventDefault();
+    setLoading(true)
+    const formData = new FormData(e.currentTarget)
+    if (isEditMode) {
+      const pwd = formData.get('password')
+      if (!pwd) formData.delete('password')
+    }
+
+    try {
+      const url = isEditMode ? `/teachers/${initialData.id}` : '/teachers';
+      const method = isEditMode ? "put" : "post";
+      await api[method](url, formData)
+      onSuccess ? onSuccess() : navigate("/teachers")
+    } catch (error) {
+      toast.error(error.response?.data?.error || error.message)
+    } finally {
+      setLoading(false)
+    }
   };
 
   useEffect(() => {
     if (initialData?.classesAssigned) {
-      setSelectedClasses(initialData.classesAssigned);
+      setSelectedClasses(normaliseClassIds(initialData.classesAssigned));
     }
   }, [initialData]);
 
@@ -64,9 +112,11 @@ const TeacherForm = ({ initialData, onSuccess, onCancel }) => {
           <div>
             <label className="block mb-2">Subject</label>
             <select name="subject" defaultValue={initialData?.subject}>
-              <option value="">Select Subject</option>
-              {SUBJECTS.map(subject => (
-                <option key={subject.code} value={subject.name}>
+              <option value="">
+                {subjectsLoading ? 'Loading subjects...' : 'Select Subject'}
+              </option>
+              {subjects.map(subject => (
+                <option key={subject._id} value={subject._id}>
                   {subject.name}
                 </option>
               ))}
@@ -109,24 +159,27 @@ const TeacherForm = ({ initialData, onSuccess, onCancel }) => {
               Classes Assigned
             </label>
             <div className="flex flex-wrap gap-2">
-              {CLASSES.map(cl => {
-                const isSelected = selectedClasses.includes(cl.name);
+              {
+                classesLoading && (
+                  <p className='text-xs text-slate-400'>Loading classes...</p>
+                )
+              }
+              {!classesLoading && classes.map(cl => {
+                const isSelected = selectedClasses.includes(cl._id);
                 return (
                   <label
-                    key={cl.name}
+                    key={cl._id}
                     className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm border 
-                                    cursor-pointer transition-colors select-none ${
-                                      isSelected
-                                        ? 'bg-indigo-50 border-indigo-300 text-indigo-700'
-                                        : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
-                                    }`}
+                                    cursor-pointer transition-colors select-none ${isSelected
+                        ? 'bg-indigo-50 border-indigo-300 text-indigo-700'
+                        : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
+                      }`}
                   >
                     <input
                       type="checkbox"
-                      name="classesAssigned"
-                      value={cl.name}
+                      value={cl._id}
                       checked={isSelected}
-                      onChange={() => toggleClass(cl.name)}
+                      onChange={() => toggleClass(cl._id)}
                       className="sr-only"
                     />
                     {cl.name}
@@ -134,7 +187,7 @@ const TeacherForm = ({ initialData, onSuccess, onCancel }) => {
                 );
               })}
             </div>
-            {selectedClasses.length === 0 && (
+            {selectedClasses.length === 0 && !classesLoading && (
               <p className="mt-2 text-xs text-slate-400">
                 No classes selected yet
               </p>
