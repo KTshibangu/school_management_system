@@ -5,34 +5,45 @@ import {
   School,
   Users,
 } from 'lucide-react';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import api from '../api/axios';
+import toast from 'react-hot-toast';
 
 const TeacherDashboard = ({ data }) => {
-  const t = data.teacher;
+  const [profileData, setProfileData] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    api.get('/profile')
+      .then((res) => setProfileData(res.data.data))
+      .catch((err) => toast.error(err.response?.data?.error || err?.message))
+      .finally(() => setLoading(false))
+  }, []);
+
 
   const cards = [
     {
       icon: School,
-      value: data.classesAssigned,
+      value: data.totalClasses,
       title: 'My Classes',
       subtitle: 'This Year',
     },
     {
       icon: Users,
-      value: data.totalStudentsTaught,
+      value: data.totalStudents,
       title: 'My Students',
       subtitle: 'This Year',
     },
     {
       icon: ClipboardCheck,
-      value: data.pendingGrading,
+      value: data.totalAssessments,
       title: 'Pending Grade',
       subtitle: 'This semester',
     },
     {
       icon: Calendar,
-      value: data.announcementsPosted,
+      value: data.totalEvents,
       title: 'Events',
       subtitle: 'This semester',
     },
@@ -40,9 +51,9 @@ const TeacherDashboard = ({ data }) => {
   return (
     <div className="animate-fade-in">
       <div className="page-header">
-        <h1 className="page-title">Welcome, {t?.firstName}!</h1>
+        <h1 className="page-title">Welcome, {profileData?.firstName}!</h1>
         <p className="page-subtitle">
-          {t?.employeeCode} - {t?.subject}
+          {profileData?.employeeCode} - {profileData?.email}
         </p>
       </div>
 
@@ -72,7 +83,7 @@ const TeacherDashboard = ({ data }) => {
 
       <div className="flex flex-col sm:flex-row gap-3">
         <Link
-          to="/tasks"
+          to="/assessments"
           className="btn-primary text-center inline-flex items-center justify-center gap-2"
         >
           Create A Task <ArrowRightIcon className="w-4 h-4" />

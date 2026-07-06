@@ -1,6 +1,0 @@
-{"level":"error","message":"Login error: data and hash arguments required","service":"school-management"}
-{"level":"error","message":"Login error: data and hash arguments required","service":"school-management"}
-{"level":"error","message":"Error creating class: E11000 duplicate key error collection: school_management.classes index: name_1_grade_1 dup key: { name: \"9A\", grade: \"9\" }","service":"school-management"}
-{"level":"error","message":"Error fetching profile: next is not a function","service":"school-management","timestamp":"2026-07-04T14:51:14.113Z"}
-{"level":"error","message":"Error fetching profile: next is not a function","service":"school-management","timestamp":"2026-07-04T14:52:42.058Z"}
-{"level":"error","message":"Error fetching profile: next is not a function","service":"school-management","timestamp":"2026-07-04T14:54:26.062Z"}

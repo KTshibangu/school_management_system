@@ -1,12 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Loader2Icon } from 'lucide-react';
-import {
-  EVENT_TYPES,
-  EVENT_AUDIENCE,
-  EVENT_STATUSES,
-} from '../assets/myassets';
 import EventSelect from './EventSelect';
+import { EVENT_TYPES, EVENT_AUDIENCE, EVENT_STATUS } from '../constants/EventConstant';
+import api from '../api/axios';
+import toast from 'react-hot-toast';
 
 const EventForm = ({ initialData, onSuccess, onCancel }) => {
   const navigate = useNavigate();
@@ -15,12 +13,12 @@ const EventForm = ({ initialData, onSuccess, onCancel }) => {
 
   const [type, setType] = useState('');
   const [audience, setAudience] = useState('');
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState(initialData?.status || 'UPCOMING');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [startDateTime, setStartDateTime] = useState('');
+  const [endDateTime, setEndDateTime] = useState('');
 
   const isInitializing = useRef(false);
 
@@ -31,12 +29,12 @@ const EventForm = ({ initialData, onSuccess, onCancel }) => {
     setDescription(initialData.description || '');
     setType(initialData.type || '');
     setAudience(initialData.audience || '');
-    setStatus(initialData.status || '');
+    setStatus(initialData.status || 'UPCOMING');
     setLocation(initialData.location || '');
-    setStartDate(
-      initialData.startDate ? initialData.startDate.slice(0, 16) : ''
+    setStartDateTime(
+      initialData.startDateTime ? initialData.startDateTime.slice(0, 16) : ''
     );
-    setEndDate(initialData.endDate ? initialData.endDate.slice(0, 16) : '');
+    setEndDateTime(initialData.endDateTime ? initialData.endDateTime.slice(0, 16) : '');
     setTimeout(() => {
       isInitializing.current = false;
     }, 0);
@@ -51,10 +49,20 @@ const EventForm = ({ initialData, onSuccess, onCancel }) => {
       audience,
       status,
       location,
-      startDate,
-      endDate,
+      startDateTime,
+      endDateTime,
     };
-    console.log(data); // replace with API call
+
+    try {
+      const url = isEditMode ? `/events/${initialData._id}` : '/events';
+      const method = isEditMode ? 'put' : 'post';
+      await api[method](url, data);
+      onSuccess ? onSuccess() : navigate('/events');
+    } catch (error) {
+      toast.error(error.response?.data?.error || error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -117,8 +125,8 @@ const EventForm = ({ initialData, onSuccess, onCancel }) => {
           <input
             type="datetime-local"
             required
-            value={startDate}
-            onChange={e => setStartDate(e.target.value)}
+            value={startDateTime}
+            onChange={e => setStartDateTime(e.target.value)}
           />
         </div>
         <div>
@@ -128,8 +136,8 @@ const EventForm = ({ initialData, onSuccess, onCancel }) => {
           <input
             type="datetime-local"
             required
-            value={endDate}
-            onChange={e => setEndDate(e.target.value)}
+            value={endDateTime}
+            onChange={e => setEndDateTime(e.target.value)}
           />
         </div>
       </div>
@@ -137,7 +145,7 @@ const EventForm = ({ initialData, onSuccess, onCancel }) => {
       {isEditMode && (
         <EventSelect
           label="Status"
-          options={EVENT_STATUSES}
+          options={EVENT_STATUS}
           value={status}
           onChange={setStatus}
           placeholder="Select status..."

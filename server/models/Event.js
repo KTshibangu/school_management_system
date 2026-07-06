@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 import { EVENT_TYPES } from '../constants/eventTypes.js'
 import { EVENT_AUDIENCES } from '../constants/eventAudience.js'
+import { EVENT_STATUS } from '../constants/eventStatus.js'
 
 
 
@@ -27,6 +28,12 @@ const eventSchema = new mongoose.Schema(
             enum: EVENT_AUDIENCES,
             required: true,
         },
+        status: {
+            type: String,
+            enum: EVENT_STATUS,
+            required: true,
+            default: "UPCOMING"
+        },
         location: {
             type: String,
             required: true,
@@ -47,11 +54,10 @@ const eventSchema = new mongoose.Schema(
 )
 
 // guard: end must always be after start at the DB level
-eventSchema.pre('save', function (next) {
+eventSchema.pre('save', function () {
     if (this.endDateTime <= this.startDateTime) {
         return next(new Error("End date and time must be after start date and time"))
     }
-    next()
 })
 
 // index for date-range queries — expected to be the most common lookup pattern

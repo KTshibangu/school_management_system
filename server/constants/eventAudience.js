@@ -1,10 +1,10 @@
 export const EVENT_AUDIENCES = [
-    "ALL",
-    "TEACHERS",
-    "STUDENTS",
-    "GRADE_8",
-    "GRADE_9",
-    "GRADE_10",
-    "GRADE_11",
-    "GRADE_12",
+  'ALL',
+  'TEACHERS',
+  'STUDENTS',
+  'Grade 8',
+  'Grade 9',
+  'Grade 10',
+  'Grade 11',
+  'Grade 12'
 ]

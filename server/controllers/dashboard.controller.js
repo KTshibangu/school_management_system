@@ -9,6 +9,8 @@ export const getDashboard = async (req, res, next) => {
         const data = role === "ADMIN"
             ? await getAdminDashboard()
             : await getTeacherDashboard(userId);
+        
+        console.log("Dashboard data:", JSON.stringify(data, null, 2));
 
         return res.status(200).json({
             success: true,
