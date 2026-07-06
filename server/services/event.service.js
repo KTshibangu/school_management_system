@@ -34,7 +34,7 @@ export const updateEvent = async (id, data) => {
     const event = await Event.findById(id);
     if (!event) throw new Error("Event not found");
 
-    const { title, description, type, audience, location, startDateTime, endDateTime } = data;
+    const { title, description, type, audience, status, location, startDateTime, endDateTime } = data;
 
     // resolve final start/end for the date-order check —
     // use incoming value if provided, otherwise fall back to what's already saved
@@ -52,6 +52,7 @@ export const updateEvent = async (id, data) => {
             ...(description   !== undefined && { description }),
             ...(type          !== undefined && { type }),
             ...(audience      !== undefined && { audience }),
+            ...(status          !== undefined && { status }),
             ...(location      !== undefined && { location }),
             ...(startDateTime !== undefined && { startDateTime }),
             ...(endDateTime   !== undefined && { endDateTime }),

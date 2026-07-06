@@ -1,8 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import {
-  dummyAdminDashboardData,
-  dummyTeacherDashboardData,
-} from '../assets/myassets';
 import Loading from '../components/Loading';
 import TeacherDashboard from '../components/TeacherDashboard';
 import AdminDashboard from '../components/AdminDashboard';

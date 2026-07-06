@@ -54,9 +54,14 @@ const Events = () => {
 
   const handleDelete = async () => {
     if (!deleteTarget) return;
-    // replace with API call: await deleteEvent(deleteTarget._id)
-    setEvents(prev => prev.filter(e => e._id !== deleteTarget._id));
-    setDeleteTarget(null);
+    try {
+      await api.delete(`/events/${deleteTarget._id}`);
+      setEvents(prev => prev.filter(e => e._id !== deleteTarget._id));
+    } catch (error) {
+      toast.error(error.response?.data?.error || error.message);
+    } finally {
+      setDeleteTarget(null);
+    }
   };
 
   const filteredEvents = useMemo(() => {
@@ -208,8 +213,8 @@ const Events = () => {
                   <div className="flex items-center gap-2 text-xs text-slate-500">
                     <CalendarIcon className="w-3.5 h-3.5 shrink-0 text-slate-400" />
                     <span>
-                      {formatDate(event.startDate)} —{' '}
-                      {formatDate(event.endDate)}
+                      {formatDate(event.startDateTime)} —{' '}
+                      {formatDate(event.endDateTime)}
                     </span>
                   </div>
                   <div className="flex items-center gap-2 text-xs text-slate-500">

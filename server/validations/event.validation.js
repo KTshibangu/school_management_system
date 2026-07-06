@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { EVENT_TYPES } from "../constants/eventTypes.js";
 import { EVENT_AUDIENCES } from "../constants/eventAudience.js";
+import { EVENT_STATUS } from "../constants/eventStatus.js";
 
 // base schema with no refinements — required so .partial() works in Zod v4
 const eventBaseSchema = z.object({
@@ -8,6 +9,7 @@ const eventBaseSchema = z.object({
     description: z.string().min(1, "Description is required"),
     type: z.enum(EVENT_TYPES, { error: `Type must be one of: ${EVENT_TYPES.join(", ")}` }),
     audience: z.enum(EVENT_AUDIENCES, { error: `Audience must be one of: ${EVENT_AUDIENCES.join(", ")}` }),
+    status: z.enum(EVENT_STATUS, { error: `status must be one of: ${EVENT_STATUS.join(", ")}` }),
     location: z.string().min(1, "Location is required"),
     startDateTime: z.coerce.date(),
     endDateTime: z.coerce.date(),

@@ -10,7 +10,6 @@ export const fetchAllStudents = async (req, res, next) => {
     try {
         logger.info("Getting students...");
         const students = await getStudents();
-        console.log("Student data:", JSON.stringify(students, null, 2));
 
         return res.status(200).json({
             success: true,
