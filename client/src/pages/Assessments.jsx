@@ -33,7 +33,7 @@ const Assessments = () => {
   }, []);
 
   const handleDelete = async (assessment) => {
-    if (!confirm('Are you want to delete this subject')) return;
+    if (!confirm('Are you want to delete this assessment')) return;
     try {
       await api.delete(`/assessments/${assessment._id}`)
       setAssessments(prev => prev.filter(a => a._id !== assessment._id));
@@ -170,7 +170,7 @@ const Assessments = () => {
                   filteredAssessments.map(a => (
                     <tr key={a._id}>
                       <td className="font-medium text-slate-800">{a.title}</td>
-                      <td>{a.class.name}</td>
+                      <td>{a.class?.name ?? '-'}</td>
                       <td>{a.term}</td>
                       <td>
                         <span className="px-2.5 py-1 rounded-full text-xs bg-indigo-50 text-indigo-700 border border-indigo-100">

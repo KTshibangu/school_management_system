@@ -54,7 +54,7 @@ const TeacherDashboard = ({ data }) => {
         <h1 className="page-title">Welcome, {loading ? '...' : profileData?.firstName}!</h1>
         <p className="page-subtitle">
           {
-            loading ? '' : `${profileData?.employeeCode} - ${profileData?.email}`
+            loading || !profileData ? '' : `${profileData?.employeeCode} - ${profileData?.email}`
           }
         </p>
       </div>

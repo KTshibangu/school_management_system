@@ -24,7 +24,7 @@ const Scores = () => {
   const fetchScores = useCallback(async () => {
     try {
       const res = await api.get('/scores');
-      setScores(res.data.data);
+      setScores(res.data.data || []);
     } catch (error) {
       console.error("Failed to fetch Scores");
       toast.error(error.response?.data?.error || error?.message);
