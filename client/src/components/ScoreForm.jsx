@@ -188,7 +188,7 @@ const ScoreForm = ({ initialData, onSuccess, onCancel }) => {
           value={maxScore}
           readOnly
           className='bg-slate-50 cursor-not-allowed'
-          placeholder="Auto-filled fro Assessment"
+          placeholder="Auto-filled from Assessment"
         />
       </div>
 
