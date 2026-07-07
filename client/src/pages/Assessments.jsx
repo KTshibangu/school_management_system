@@ -1,48 +1,65 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { Plus, X, PencilIcon, Trash2Icon } from 'lucide-react';
 import {
-  dummyAssignmentData,
-  CLASSES,
-  TERMS,
+  SCHOOL_TERMS,
   ASSESSMENT_TYPES,
-} from '../assets/myassets';
+} from '../constants/AssessmentConstant';
 import AssessmentForm from '../components/AssessmentForm';
 import AssessmentSelect from '../components/AssessmentSelect';
-
-const classNames = [...new Set(CLASSES.map(s => s.name))];
+import api from '../api/axios';
+import toast from 'react-hot-toast';
 
 const Assessments = () => {
   const [assessments, setAssessments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editAssessment, setEditAssessment] = useState(null);
+  const [classes, setClasses] = useState([]);
 
   const [filterType, setFilterType] = useState('');
   const [filterTerm, setFilterTerm] = useState('');
   const [filterClass, setFilterClass] = useState('');
 
   const fetchAssessments = useCallback(async () => {
-    setLoading(true);
-    setTimeout(() => {
-      setAssessments(dummyAssignmentData);
-      setLoading(false);
-    }, 1000);
+    try {
+      const res = await api.get('/assessments')
+      setAssessments(res.data.data)
+    } catch (error) {
+      console.error("Failed to fetch Assessments")
+      toast.error(error.response?.data?.error || error?.message)
+    } finally {
+      setLoading(false)
+    }
   }, []);
 
-  const handleDelete = async () => {
+  const handleDelete = async (assessment) => {
     if (!confirm('Are you want to delete this subject')) return;
+    try {
+      await api.delete(`/assessments/${assessment._id}`)
+      setAssessments(prev => prev.filter(a => a._id !== assessment._id));
+    } catch (error) {
+      toast.error(error.response?.data?.error || error.message)
+    }
   };
 
   useEffect(() => {
     fetchAssessments();
   }, [fetchAssessments]);
 
+  useEffect(() => {
+    api.get('/classes')
+      .then(({ data }) => setClasses(data.data || []))
+      .catch((err) => console.error('Failed to load classes:', err));
+  }, []);
+
+
   const filteredAssessments = useMemo(() => {
     return assessments.filter(a => {
       const matchType =
-        !filterType || a.assessmentType === filterType.toUpperCase();
+        !filterType || a.type === filterType;
       const matchTerm = !filterTerm || a.term === filterTerm;
-      const matchClass = !filterClass || a.className === filterClass;
+      const assessmentClassId = typeof a.class === 'string' ? a.class : a.class?._id;
+      const matchClass = !filterClass || assessmentClassId === filterClass;
       return matchType && matchTerm && matchClass;
     });
   }, [assessments, filterType, filterTerm, filterClass]);
@@ -104,14 +121,14 @@ const Assessments = () => {
           />
           <AssessmentSelect
             label="Filter by Term"
-            options={TERMS}
+            options={SCHOOL_TERMS}
             value={filterTerm}
             onChange={setFilterTerm}
             placeholder="All"
           />
           <AssessmentSelect
             label="Filter by Class"
-            options={classNames}
+            options={classes.map(cl => ({ label: cl.name, value: cl._id }))}
             value={filterClass}
             onChange={setFilterClass}
             placeholder="All"
@@ -153,14 +170,14 @@ const Assessments = () => {
                   filteredAssessments.map(a => (
                     <tr key={a._id}>
                       <td className="font-medium text-slate-800">{a.title}</td>
-                      <td>{a.className}</td>
+                      <td>{a.class.name}</td>
                       <td>{a.term}</td>
                       <td>
                         <span className="px-2.5 py-1 rounded-full text-xs bg-indigo-50 text-indigo-700 border border-indigo-100">
-                          {a.assessmentType}
+                          {a.type}
                         </span>
                       </td>
-                      <td>{a.totalMarks}</td>
+                      <td>{a.maxScore}</td>
                       <td>
                         {new Date(a.dueDate).toLocaleDateString('en-ZA', {
                           day: 'numeric',
@@ -178,7 +195,7 @@ const Assessments = () => {
                         </button>
 
                         <button
-                          onClick={handleDelete}
+                          onClick={() => handleDelete(a)}
                           className="p-2.5 bg-white/90 backdrop-blur-sm text-slate-700 hover:text-rose-600 
                                                 rounded-xl shadow-lg transition-all hover:scale-105 disabled:opacity-50"
                         >

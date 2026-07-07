@@ -57,11 +57,10 @@ scoreSchema.index({ class: 1 })
 scoreSchema.index({ gradedBy: 1 })
 
 // guard: score cannot exceed maxScore
-scoreSchema.pre('save', function (next) {
+scoreSchema.pre('save', function () {
     if (this.score > this.maxScore) {
         return next(new Error("Score cannot exceed max score"))
     }
-    next()
 })
 
 const Score = mongoose.models.Score || mongoose.model('Score', scoreSchema)

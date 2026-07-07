@@ -1,14 +1,28 @@
 import React from 'react';
 import { useState } from 'react';
 import { User, Loader2, Save } from 'lucide-react';
+import api from '../api/axios';
 
-const ProfileForm = ({ initialData, onSuccess }) => {
+const ProfileForm = ({ initialData, onSuccess, user }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
 
   const handleSubmit = async e => {
     e.preventDefault();
+    setLoading(true)
+    setError("")
+    setMessage("")
+    const formData = new FormData(e.currentTarget)
+    try {
+      await api.put("/profile", formData)
+      setMessage("Profile updated successfully!")
+      onSuccess()
+    } catch (error) {
+      setError(error.response?.data?.error || error.message)
+    } finally {
+      setLoading(false)
+    }
   };
 
   return (

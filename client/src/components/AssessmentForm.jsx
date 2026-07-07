@@ -1,22 +1,63 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Loader2Icon } from 'lucide-react';
-import { CLASSES, TERMS, ASSESSMENT_TYPES } from '../assets/myassets';
+import { SCHOOL_TERMS, ASSESSMENT_TYPES } from '../constants/AssessmentConstant';
 import AssessmentSelect from './AssessmentSelect';
+import api from '../api/axios';
+import toast from 'react-hot-toast';
 
 const AssessmentForm = ({ initialData, onSuccess, onCancel }) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const isEditMode = !!initialData;
 
-  const [type, setType] = useState(initialData?.assessmentType || '');
+  const [type, setType] = useState(initialData?.type || '');
   const [term, setTerm] = useState(initialData?.term || '');
-  const [classes, setClasses] = useState(initialData?.className || '');
+  const [classId, setClassId] = useState(
+    initialData?.class?._id || initialData?.class || ''
+  );
 
-  const classNames = [...new Set(CLASSES.map(s => s.name))];
+  const [classes, setClasses] = useState([]);
+  const [classesLoading, setClassesLoading] = useState(true);
+
+  useEffect(() => {
+    api.get('/classes')
+      .then(({ data }) => setClasses(data.data || []))
+      .catch((err) => {
+        console.error('Failed to load classes:', err);
+        toast.error('Could not load classes');
+      })
+      .finally(() => setClassesLoading(false));
+  }, []);
+
+  useEffect(() => {
+    if (initialData) {
+      setType(initialData.type || '');
+      setTerm(initialData.term || '');
+      setClassId(initialData.class?._id || initialData.class || '');
+    }
+  }, [initialData]);
 
   const handleSubmit = async e => {
     e.preventDefault();
+    setLoading(true);
+
+    const formData = new FormData(e.currentTarget);
+    const payload = Object.fromEntries(formData.entries());
+    payload.type = type;
+    payload.term = term;
+    payload.class = classId;
+
+    try {
+      const url = isEditMode ? `/assessments/${initialData._id}` : '/assessments';
+      const method = isEditMode ? 'put' : 'post';
+      await api[method](url, payload);
+      onSuccess ? onSuccess() : navigate('/assessments');
+    } catch (error) {
+      toast.error(error.response?.data?.error || error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -54,7 +95,7 @@ const AssessmentForm = ({ initialData, onSuccess, onCancel }) => {
 
       <AssessmentSelect
         label="Term"
-        options={TERMS}
+        options={SCHOOL_TERMS}
         value={term}
         onChange={setTerm}
         placeholder="Select..."
@@ -62,10 +103,10 @@ const AssessmentForm = ({ initialData, onSuccess, onCancel }) => {
 
       <AssessmentSelect
         label="Class"
-        options={classNames}
-        value={classes}
-        onChange={setClasses}
-        placeholder="Select..."
+        options={classes.map(cl => ({ label: cl.name, value: cl._id }))}
+        value={classId}
+        onChange={setClassId}
+        placeholder={classesLoading ? 'Loading classes...' : 'Select...'}
       />
 
       <div>
@@ -74,7 +115,7 @@ const AssessmentForm = ({ initialData, onSuccess, onCancel }) => {
           type="datetime-local"
           name="dueDate"
           required
-          defaultValue={initialData?.dueDate.slice(0, 16)}
+          defaultValue={initialData?.dueDate ? initialData.dueDate.slice(0, 16) : ''}
         />
       </div>
 
@@ -85,7 +126,7 @@ const AssessmentForm = ({ initialData, onSuccess, onCancel }) => {
           name="maxScore"
           required
           min={1}
-          defaultValue={initialData?.totalMarks}
+          defaultValue={initialData?.maxScore}
           placeholder="e.g. 100"
         />
       </div>

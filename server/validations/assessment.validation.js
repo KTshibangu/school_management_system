@@ -11,7 +11,7 @@ const assessmentBaseSchema = z.object({
     term: z.enum(SCHOOL_TERMS, { error: `Term must be one of: ${SCHOOL_TERMS.join(", ")}` }),
     class: objectIdSchema,
     dueDate: z.coerce.date(),
-    maxScore: z.number({ error: "Max score must be a number" }).min(1, "Max score must be at least 1"),
+    maxScore: z.coerce.number({ error: "Max score must be a number" }).min(1, "Max score must be at least 1"),
 });
 
 export const createAssessmentSchema = assessmentBaseSchema;

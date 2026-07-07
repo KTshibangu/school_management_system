@@ -9,6 +9,8 @@ export const fetchAllAssessments = async (req, res, next) => {
         logger.info(`Getting assessments for teacher ${req.user.userId}`);
         const assessments = await getAssessments(req.user.userId);
 
+        console.log('Assessment data', assessments)
+
         return res.status(200).json({
             success: true,
             message: "Successfully retrieved assessments",
