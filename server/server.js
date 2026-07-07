@@ -17,6 +17,7 @@ import eventRouter from './routes/event.routes.js'
 import assessmentRouter from './routes/assessment.routes.js'
 import scoreRouter from './routes/score.routes.js'
 import dashboardRouter from './routes/dashboard.routes.js'
+import { securityMiddleware } from './middleware/security.middleware.js'
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -30,6 +31,8 @@ app.use(helmet())
 app.use(express.urlencoded({ extended: true }))
 app.use(morgan('combined', {stream: {write: (message) => logger.info(message.trim())}}))
 app.use(cookieParser())
+
+app.use(securityMiddleware)
 
 //Routes 
 app.get('/', (req, res) => {
