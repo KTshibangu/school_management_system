@@ -1,26 +1,20 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { Plus, X, PencilIcon, Trash2Icon } from 'lucide-react';
-import {
-  dummyGradeData,
-  CLASSES,
-  TERMS,
-  dummyStudentData,
-} from '../assets/myassets';
+import { SCHOOL_TERMS } from '../constants/ScoreConstant';
 import { getGradeDisplay } from '../assets/myassets';
 import ScoreForm from '../components/ScoreForm';
 import ScoreSelect from '../components/ScoreSelect';
-
-const gradeNumbers = [
-  ...new Set(CLASSES.map(c => String(c.gradeLevels))),
-].sort();
-const classNames = CLASSES.map(c => c.name);
-const studentNames = dummyStudentData.map(s => `${s.firstName} ${s.lastName}`);
+import api from '../api/axios';
+import toast from 'react-hot-toast';
 
 const Scores = () => {
   const [scores, setScores] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editScores, setEditScores] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [classes, setClasses] = useState([]);
+  const [students, setStudents] = useState([]);
 
   const [filterGrade, setFilterGrade] = useState('');
   const [filterClass, setFilterClass] = useState('');
@@ -28,15 +22,27 @@ const Scores = () => {
   const [filterStudent, setFilterStudent] = useState('');
 
   const fetchScores = useCallback(async () => {
-    setLoading(true);
-    setTimeout(() => {
-      setScores(dummyGradeData);
+    try {
+      const res = await api.get('/scores');
+      setScores(res.data.data);
+    } catch (error) {
+      console.error("Failed to fetch Scores");
+      toast.error(error.response?.data?.error || error?.message);
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   }, []);
 
   const handleDelete = async () => {
-    if (!confirm('Are you want to delete this subject')) return;
+    if (!deleteTarget) return;
+    try {
+      await api.delete(`/scores/${deleteTarget._id}`);
+      setScores(prev => prev.filter(s => s._id !== deleteTarget._id));
+      setDeleteTarget(null);
+    } catch (error) {
+      toast.error(error.response?.data?.error || error.message);
+      setDeleteTarget(null);
+    }
   };
 
   useEffect(() => {
@@ -44,23 +50,45 @@ const Scores = () => {
   }, [fetchScores]);
 
   useEffect(() => {
+    api.get('/classes')
+      .then(({ data }) => setClasses(data.data || []))
+      .catch((err) => console.error('Failed to load classes:', err));
+
+    api.get('/students')
+      .then(({ data }) => setStudents(data.data || []))
+      .catch((err) => console.error('Failed to load students:', err));
+  }, []);
+
+  useEffect(() => {
     setFilterClass('');
   }, [filterGrade]);
 
-  const filteredClassOptions = CLASSES.filter(
-    c => !filterGrade || String(c.gradeLevels) === filterGrade
-  ).map(c => c.name);
+  // grade options derived from Class.grade (matches Score.gradeLevel values)
+  const gradeOptions = useMemo(
+    () => [...new Set(classes.map(c => c.grade))].sort(),
+    [classes]
+  );
 
-  const filteredGrades = useMemo(() => {
-    return scores.filter(g => {
-      const studentName = g.student
-        ? `${g.student.firstName} ${g.student.lastName}`
-        : '';
-      const matchGrade =
-        !filterGrade || g.student?.grade === `Grade ${filterGrade}`;
-      const matchClass = !filterClass || g.student?.className === filterClass;
-      const matchTerm = !filterTerm || g.term === filterTerm;
-      const matchStudent = !filterStudent || studentName === filterStudent;
+  // only show classes matching the selected grade
+  const classOptions = useMemo(() => {
+    return classes
+      .filter(c => !filterGrade || c.grade === filterGrade)
+      .map(c => ({ label: c.name, value: c._id }));
+  }, [classes, filterGrade]);
+
+  // only show students in the selected class (if any)
+  const studentOptions = useMemo(() => {
+    return students
+      .filter(s => !filterClass || s.class?._id === filterClass || s.class === filterClass)
+      .map(s => ({ label: `${s.firstName} ${s.lastName}`, value: s._id }));
+  }, [students, filterClass]);
+
+  const filteredScores = useMemo(() => {
+    return scores.filter(s => {
+      const matchGrade = !filterGrade || s.gradeLevel === filterGrade;
+      const matchClass = !filterClass || s.class?._id === filterClass;
+      const matchTerm = !filterTerm || s.assessment?.term === filterTerm;
+      const matchStudent = !filterStudent || s.student?._id === filterStudent;
       return matchGrade && matchClass && matchTerm && matchStudent;
     });
   }, [scores, filterGrade, filterClass, filterTerm, filterStudent]);
@@ -114,22 +142,29 @@ const Scores = () => {
       <div className="card p-5 mb-5">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <ScoreSelect
+            label="Filter by Grade"
+            options={gradeOptions}
+            value={filterGrade}
+            onChange={setFilterGrade}
+            placeholder="All grades"
+          />
+          <ScoreSelect
             label="Filter by Class"
-            options={filteredClassOptions}
+            options={classOptions}
             value={filterClass}
             onChange={setFilterClass}
             placeholder="All classes"
           />
           <ScoreSelect
             label="Filter by Term"
-            options={TERMS}
+            options={SCHOOL_TERMS}
             value={filterTerm}
             onChange={setFilterTerm}
             placeholder="All terms"
           />
           <ScoreSelect
             label="Filter by Student"
-            options={studentNames}
+            options={studentOptions}
             value={filterStudent}
             onChange={setFilterStudent}
             placeholder="All students"
@@ -159,46 +194,42 @@ const Scores = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredGrades.length === 0 ? (
+                {filteredScores.length === 0 ? (
                   <tr>
-                    <td
-                      colSpan={7}
-                      className="text-center text-slate-400 py-10"
-                    >
+                    <td colSpan={8} className="text-center text-slate-400 py-10">
                       No scores found
                     </td>
                   </tr>
                 ) : (
-                  filteredGrades.map(g => {
-                    const { grade, className: badgeClass } = getGradeDisplay(
-                      g.percentage
-                    );
+                  filteredScores.map(s => {
+                    const percentage = s.maxScore
+                      ? Math.round((s.score / s.maxScore) * 100)
+                      : 0;
+                    const { grade, className: badgeClass } = getGradeDisplay(percentage);
                     return (
-                      <tr key={g._id}>
+                      <tr key={s._id}>
                         <td className="font-medium text-slate-800">
-                          {g.assessmentType}
+                          {s.assessment?.title || '—'}
                         </td>
                         <td>
-                          {g.student
-                            ? `${g.student.firstName} ${g.student.lastName}`
+                          {s.student
+                            ? `${s.student.firstName} ${s.student.lastName}`
                             : '—'}
                         </td>
-                        <td>{g.term}</td>
-                        <td>{g.student?.className || '—'}</td>
+                        <td>{s.assessment?.term || '—'}</td>
+                        <td>{s.class?.name || '—'}</td>
                         <td>
-                          {g.marksObtained} / {g.totalMarks}
+                          {s.score} / {s.maxScore}
                         </td>
-                        <td>{g.percentage}%</td>
+                        <td>{percentage}%</td>
                         <td>
-                          <span
-                            className={`px-2.5 py-1 rounded-full text-xs border ${badgeClass}`}
-                          >
+                          <span className={`px-2.5 py-1 rounded-full text-xs border ${badgeClass}`}>
                             {grade}
                           </span>
                         </td>
                         <td className="flex items-center gap-2">
                           <button
-                            onClick={() => setEditScores(g)}
+                            onClick={() => setEditScores(s)}
                             className="p-2.5 bg-white/90 backdrop-blur-sm text-slate-700 hover:text-indigo-600 rounded-xl 
                                                     shadow-lg transition-all hover:scale-105 cursor-pointer"
                           >
@@ -206,7 +237,7 @@ const Scores = () => {
                           </button>
 
                           <button
-                            onClick={handleDelete}
+                            onClick={() => setDeleteTarget(s)}
                             className="p-2.5 bg-white/90 backdrop-blur-sm text-slate-700 hover:text-rose-600 
                                                 rounded-xl shadow-lg transition-all hover:scale-105 disabled:opacity-50"
                           >
@@ -253,6 +284,40 @@ const Scores = () => {
           />,
           () => setEditScores(null)
         )}
+
+      {/* Delete Confirmation Modal */}
+      {deleteTarget && (
+        <div
+          onClick={() => setDeleteTarget(null)}
+          className="fixed bg-black/40 backdrop-blur-sm inset-0 z-50 flex items-center justify-center p-4"
+        >
+          <div
+            onClick={e => e.stopPropagation()}
+            className="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 animate-fade-in"
+          >
+            <h2 className="text-lg font-semibold text-slate-900 mb-1">Delete Score</h2>
+            <p className="text-sm text-slate-500 mb-6">
+              Are you sure you want to delete this score
+              {deleteTarget.student && (
+                <> for <span className="font-medium text-slate-700">
+                  {deleteTarget.student.firstName} {deleteTarget.student.lastName}
+                </span></>
+              )}? This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button onClick={() => setDeleteTarget(null)} className="btn-secondary cursor-pointer">
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white text-sm font-medium rounded-lg transition-colors cursor-pointer"
+              >
+                Delete Score
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -4,7 +4,7 @@ import { protect, requireRole } from "../middleware/auth.middleware.js";
 
 const classRouter = Router();
 
-classRouter.use(protect, requireRole(["ADMIN"]));
+classRouter.use(protect, requireRole(["ADMIN", "TEACHER"]));
 
 classRouter.get("/", fetchAllClasses);
 classRouter.get("/:id", fetchClassById);

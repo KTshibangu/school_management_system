@@ -1,0 +1,1 @@
+export const SCHOOL_TERMS = ["Term1", "Term2", "Term3", "Term4"]

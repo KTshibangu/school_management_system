@@ -19,6 +19,15 @@ const AssessmentSelect = ({
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
+  // normalize so options can be plain strings OR { label, value } objects
+  const normalizedOptions = options.map(opt =>
+    typeof opt === 'object' && opt !== null
+      ? { label: opt.label, value: opt.value }
+      : { label: opt, value: opt }
+  );
+
+  const selectedOption = normalizedOptions.find(o => o.value === value);
+
   return (
     <div className="relative w-full" ref={ref}>
       {label && (
@@ -32,7 +41,7 @@ const AssessmentSelect = ({
                 ${open ? 'border-indigo-400 ring-2 ring-indigo-100' : 'border-slate-200 hover:border-slate-300'}
                 ${value ? 'text-slate-800' : 'text-slate-400'}`}
       >
-        {value || placeholder}
+        {selectedOption ? selectedOption.label : placeholder}
         <ChevronDown
           className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
         />
@@ -54,20 +63,20 @@ const AssessmentSelect = ({
                 {!value && <Check className="w-4 h-4 text-indigo-500" />}
               </button>
             </li>
-            {options.map(opt => {
-              const isSelected = value === opt;
+            {normalizedOptions.map(opt => {
+              const isSelected = value === opt.value;
               return (
-                <li key={opt}>
+                <li key={opt.value}>
                   <button
                     type="button"
                     onClick={() => {
-                      onChange(opt);
+                      onChange(opt.value);
                       setOpen(false);
                     }}
                     className={`flex items-center justify-between px-4 py-2.5 text-sm cursor-pointer transition-colors
                                     ${isSelected ? 'bg-indigo-50 text-indigo-700' : 'text-slate-700 hover:bg-slate-50'}`}
                   >
-                    {opt}
+                    {opt.label}
                     {isSelected && (
                       <Check className="w-4 h-4 text-indigo-500" />
                     )}

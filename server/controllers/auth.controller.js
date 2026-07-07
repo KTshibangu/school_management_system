@@ -50,9 +50,9 @@ export const changePassword = async (req, res, next) => {
             });
         }
 
-        await changeUserPassword(req.session.userId, validation.data);
+        await changeUserPassword(req.user.userId, validation.data);
 
-        logger.info(`Password changed for user ${req.session.userId}`);
+        logger.info(`Password changed for user ${req.user.userId}`);
         return res.status(200).json({ success: true });
     } catch (error) {
         logger.error(`Change password error: ${error.message}`);

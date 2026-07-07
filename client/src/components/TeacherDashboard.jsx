@@ -11,7 +11,7 @@ import api from '../api/axios';
 import toast from 'react-hot-toast';
 
 const TeacherDashboard = ({ data }) => {
-  const [profileData, setProfileData] = useState([])
+  const [profileData, setProfileData] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -51,9 +51,11 @@ const TeacherDashboard = ({ data }) => {
   return (
     <div className="animate-fade-in">
       <div className="page-header">
-        <h1 className="page-title">Welcome, {profileData?.firstName}!</h1>
+        <h1 className="page-title">Welcome, {loading ? '...' : profileData?.firstName}!</h1>
         <p className="page-subtitle">
-          {profileData?.employeeCode} - {profileData?.email}
+          {
+            loading ? '' : `${profileData?.employeeCode} - ${profileData?.email}`
+          }
         </p>
       </div>
 

@@ -1,17 +1,19 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Loader2Icon } from 'lucide-react';
-import {
-  CLASSES,
-  dummyStudentData,
-  dummyAssignmentData,
-} from '../assets/myassets';
 import ScoreSelect from './ScoreSelect';
+import api from '../api/axios';
+import toast from 'react-hot-toast';
 
 const ScoreForm = ({ initialData, onSuccess, onCancel }) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const isEditMode = !!initialData;
+
+  const [classes, setClasses] = useState([]);
+  const [students, setStudents] = useState([]);
+  const [assessments, setAssessments] = useState([]);
+  const [dataLoading, setDataLoading] = useState(true);
 
   const [selectedGrade, setSelectedGrade] = useState('');
   const [selectedClass, setSelectedClass] = useState('');
@@ -23,45 +25,63 @@ const ScoreForm = ({ initialData, onSuccess, onCancel }) => {
 
   const isInitializing = useRef(false);
 
-  const gradeOptions = [
-    ...new Set(CLASSES.map(c => String(c.gradeLevels))),
-  ].sort();
+  useEffect(() => {
+    Promise.all([
+      api.get('/classes'),
+      api.get('/students'),
+      api.get('/assessments'),
+    ])
+      .then(([classesRes, studentsRes, assessmentsRes]) => {
+        setClasses(classesRes.data.data || []);
+        setStudents(studentsRes.data.data || []);
+        setAssessments(assessmentsRes.data.data || []);
+      })
+      .catch((err) => {
+        console.error('Failed to load form data:', err);
+        toast.error('Could not load classes/students/assessments');
+      })
+      .finally(() => setDataLoading(false));
+  }, []);
 
-  const classOptions = CLASSES.filter(
-    c => !selectedGrade || String(c.gradeLevels) === selectedGrade
-  ).map(c => c.name);
+  const gradeOptions = [...new Set(classes.map(c => c.grade))].sort();
 
-  const studentOptions = dummyStudentData
-    .filter(s => !selectedClass || s.className === selectedClass)
-    .map(s => `${s.firstName} ${s.lastName}`);
+  const classOptions = classes
+    .filter(c => !selectedGrade || c.grade === selectedGrade)
+    .map(c => ({ label: c.name, value: c._id }));
 
-  const assessmentOptions = dummyAssignmentData
-    .filter(a => !selectedClass || a.className === selectedClass)
-    .map(a => a.title);
+  const studentOptions = students
+    .filter(s => {
+      const studentClassId = typeof s.class === 'string' ? s.class : s.class?._id;
+      return !selectedClass || studentClassId === selectedClass;
+    })
+    .map(s => ({ label: `${s.firstName} ${s.lastName}`, value: s._id }));
+
+  const assessmentOptions = assessments
+    .filter(a => {
+      const assessmentClassId = typeof a.class === 'string' ? a.class : a.class?._id;
+      return !selectedClass || assessmentClassId === selectedClass;
+    })
+    .map(a => ({ label: a.title, value: a._id }));
 
   useEffect(() => {
     if (!initialData) return;
     isInitializing.current = true;
 
-    const gradeNum =
-      initialData.student?.grade?.replace('Grade ', '').trim() || '';
-    const className = initialData.student?.className || '';
-    const studentName = initialData.student
-      ? `${initialData.student.firstName} ${initialData.student.lastName}`
-      : '';
+    const classId = initialData.class?._id || initialData.class || '';
+    const classDoc = classes.find(c => c._id === classId);
 
-    setSelectedGrade(gradeNum);
-    setSelectedClass(className);
-    setSelectedAssessment(initialData.assessmentType || '');
-    setSelectedStudent(studentName);
-    setScore(String(initialData.marksObtained ?? ''));
-    setMaxScore(String(initialData.totalMarks ?? ''));
+    setSelectedGrade(initialData.gradeLevel || classDoc?.grade || '');
+    setSelectedClass(classId);
+    setSelectedAssessment(initialData.assessment?._id || initialData.assessment || '');
+    setSelectedStudent(initialData.student?._id || initialData.student || '');
+    setScore(String(initialData.score ?? ''));
+    setMaxScore(String(initialData.maxScore ?? ''));
     setRemarks(initialData.remarks || '');
 
     setTimeout(() => {
       isInitializing.current = false;
     }, 0);
-  }, [initialData]);
+  }, [initialData, classes]);
 
   useEffect(() => {
     if (isInitializing.current) return;
@@ -76,18 +96,40 @@ const ScoreForm = ({ initialData, onSuccess, onCancel }) => {
     setSelectedStudent('');
   }, [selectedClass]);
 
+  useEffect(() => {
+    if (isInitializing.current) return;
+    if (!selectedAssessment) return;
+
+    const assessment = assessments.find(a => a._id === selectedAssessment);
+    if (assessment) {
+      setMaxScore(String(assessment.maxScore));
+    }
+  }, [selectedAssessment, assessments]);
+
   const handleSubmit = async e => {
     e.preventDefault();
-    const data = {
-      grade: selectedGrade,
-      className: selectedClass,
+    setLoading(true);
+
+    const payload = {
+      gradeLevel: selectedGrade,
+      class: selectedClass,
       assessment: selectedAssessment,
       student: selectedStudent,
-      score,
-      maxScore,
+      score: Number(score),
+      maxScore: Number(maxScore),
       remarks,
     };
-    console.log(data); // replace with API call
+
+    try {
+      const url = isEditMode ? `/scores/${initialData._id}` : '/scores';
+      const method = isEditMode ? 'put' : 'post';
+      await api[method](url, payload);
+      onSuccess ? onSuccess() : navigate('/scores');
+    } catch (error) {
+      toast.error(error.response?.data?.error || error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -97,7 +139,7 @@ const ScoreForm = ({ initialData, onSuccess, onCancel }) => {
         options={gradeOptions}
         value={selectedGrade}
         onChange={setSelectedGrade}
-        placeholder="Select grade..."
+        placeholder={dataLoading ? 'Loading...' : 'Select grade...'}
       />
       <ScoreSelect
         label="Class"
@@ -144,8 +186,9 @@ const ScoreForm = ({ initialData, onSuccess, onCancel }) => {
           min={1}
           required
           value={maxScore}
-          onChange={e => setMaxScore(e.target.value)}
-          placeholder="e.g. 100"
+          readOnly
+          className='bg-slate-50 cursor-not-allowed'
+          placeholder="Auto-filled fro Assessment"
         />
       </div>
 
