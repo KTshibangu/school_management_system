@@ -12,7 +12,7 @@ export const securityMiddleware = async (req, res, next) => {
         let message;
 
         switch (role) {
-            case 'ADMIIN':
+            case 'ADMIN':
                 limit = 20
                 message = 'Admin request limit exceeded (20 per minute). Slow down.'
                 break;
@@ -20,6 +20,10 @@ export const securityMiddleware = async (req, res, next) => {
                 limit = 10
                 message = 'Teacher request limit exceeded (10 per minute). Slow down.'
                 break;
+            default:
+                limit =5
+                message = 'Request limit exceeded. Slow down'
+                break
         }
 
         const client = aj.withRule(slidingWindow({ node: 'LIVE', interval: '30s', max: limit, name: `${role}-rate-limit` }))
@@ -33,7 +37,7 @@ export const securityMiddleware = async (req, res, next) => {
 
         if (decision.isDenied() && decision.reason.isShield()) {
             logger.warn('Shield request blocked', { ip: req.ip, userAgent: req.get('User-Agent'), path: req.path, method: req.method })
-            return res.status(403).json({ error: 'Forbidden', message: 'ARequests blocked by security policy' })
+            return res.status(403).json({ error: 'Forbidden', message: 'Requests blocked by security policy' })
         }
 
         if (decision.isDenied() && decision.reason.isRateLimit()) {
